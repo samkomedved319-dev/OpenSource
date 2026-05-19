@@ -58,6 +58,6 @@ Obsidian Vault/.obsidian/backups/
 Obsidian Vault/.obsidian/plugins/obsidian-git/
 
 # CLI temp files
-nexus-cli/sessions/
-nexus-cli/memory/learned/
-nexus-cli/db.sqlite
+opensource-cli/sessions/
+opensource-cli/memory/learned/
+opensource-cli/db.sqlite

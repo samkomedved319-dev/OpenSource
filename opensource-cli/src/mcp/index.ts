@@ -34,7 +34,7 @@ export class MCPServerManager {
       });
 
       const client = new Client(
-        { name: 'nexus-cli', version: '1.0.0' },
+        { name: 'opensource-cli', version: '1.1.0' },
         { capabilities: {} }
       );
 
