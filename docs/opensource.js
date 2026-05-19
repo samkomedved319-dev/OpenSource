@@ -192,6 +192,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const countTagsElement = document.getElementById('count-tags');
   const syncProgressElement = document.getElementById('sync-progress');
   const syncMsgElement = document.getElementById('sync-msg');
+  const eventStreamElement = document.getElementById('event-stream');
+
+  let streamTimers = [];
 
   if (loginForm) {
     loginForm.addEventListener('submit', (e) => {
@@ -243,6 +246,9 @@ document.addEventListener('DOMContentLoaded', () => {
               
               // 3. Animate metrics & sync bar counters
               animateDashboardStats();
+              
+              // 4. Start Event Stream Sim
+              startLiveEventStream();
             }, 50);
 
             // Re-enable form button for potential future runs
@@ -298,11 +304,48 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 100);
   }
 
+  function startLiveEventStream() {
+    if (!eventStreamElement) return;
+
+    // Clear and add system connect log
+    eventStreamElement.innerHTML = '<div class="event-line system">[system] gateway connection established on port 3100</div>';
+
+    const events = [
+      { msg: "[handshake] session validated: agent alias 'samko' active", class: "handshake" },
+      { msg: "[memory] loading index: scanning local Obsidian knowledge database...", class: "memory" },
+      { msg: "[memory] parsed: 142 notes and 34 tags cataloged successfully", class: "memory" },
+      { msg: "[workspace] dynamic scan target directory: root folder ./src detected", class: "workspace" },
+      { msg: "[mcp] initializing MCP Client SDK server list...", class: "mcp" },
+      { msg: "[agent] loading Source PRO LLM model layers into Ollama memory...", class: "agent" },
+      { msg: "[system] active context initialized. Ready for task inputs.", class: "system" }
+    ];
+
+    // Clear past timers
+    streamTimers.forEach(clearTimeout);
+    streamTimers = [];
+
+    // Progressive append
+    events.forEach((evt, idx) => {
+      const timer = setTimeout(() => {
+        const line = document.createElement("div");
+        line.className = `event-line ${evt.class}`;
+        line.textContent = evt.msg;
+        eventStreamElement.appendChild(line);
+        eventStreamElement.scrollTop = eventStreamElement.scrollHeight;
+      }, 700 + idx * 800);
+      streamTimers.push(timer);
+    });
+  }
+
   // Disconnect button handler
   if (disconnectBtn) {
     disconnectBtn.addEventListener('click', () => {
       stateDashboard.style.opacity = '0';
       stateDashboard.style.transform = 'scale(0.95)';
+
+      // Clear stream timers
+      streamTimers.forEach(clearTimeout);
+      streamTimers = [];
 
       setTimeout(() => {
         stateDashboard.classList.add('hidden');
@@ -327,5 +370,222 @@ document.addEventListener('DOMContentLoaded', () => {
       item.classList.add('active');
     });
   });
+
+
+  // ── 4. Interactive CLI Command Builder ─────────────────────────────────
+  const builderAgent = document.getElementById('builder-agent');
+  const builderModel = document.getElementById('builder-model');
+  const flagPlan = document.getElementById('flag-plan');
+  const flagAuto = document.getElementById('flag-auto');
+  const flagVerbose = document.getElementById('flag-verbose');
+  const builderInputPrompt = document.getElementById('builder-input-prompt');
+  const generatedCommand = document.getElementById('generated-command');
+  const btnCopyCommand = document.getElementById('btn-copy-command');
+
+  function updateGeneratedCommand() {
+    if (!generatedCommand) return;
+
+    const agent = builderAgent ? builderAgent.value : 'coder';
+    const model = builderModel ? builderModel.value : 'Source PRO';
+    const showPlan = flagPlan ? flagPlan.checked : true;
+    const isAuto = flagAuto ? flagAuto.checked : false;
+    const isVerbose = flagVerbose ? flagVerbose.checked : false;
+    
+    let rawPrompt = builderInputPrompt ? builderInputPrompt.value.trim() : 'my task';
+    if (!rawPrompt) rawPrompt = "my task";
+    
+    // Sanitize quotes in prompt
+    const cleanPrompt = rawPrompt.replace(/"/g, '\\"');
+
+    // Build command string
+    let cmd = `opensource "${cleanPrompt}" --agent ${agent} -m "${model}"`;
+    if (showPlan) cmd += " --plan";
+    if (isAuto) cmd += " --auto";
+    if (isVerbose) cmd += " --verbose";
+
+    generatedCommand.textContent = cmd;
+  }
+
+  // Bind Listeners
+  const builderInputs = [builderAgent, builderModel, flagPlan, flagAuto, flagVerbose, builderInputPrompt];
+  builderInputs.forEach(input => {
+    if (input) {
+      input.addEventListener('input', updateGeneratedCommand);
+      input.addEventListener('change', updateGeneratedCommand);
+    }
+  });
+
+  // Copy command to clipboard
+  if (btnCopyCommand) {
+    btnCopyCommand.addEventListener('click', () => {
+      if (!generatedCommand) return;
+      const cmdText = generatedCommand.textContent;
+      
+      navigator.clipboard.writeText(cmdText).then(() => {
+        const originalText = btnCopyCommand.textContent;
+        btnCopyCommand.textContent = "Copied!";
+        btnCopyCommand.style.background = "var(--emerald)";
+        btnCopyCommand.style.color = "var(--bg-dark)";
+        
+        setTimeout(() => {
+          btnCopyCommand.textContent = originalText;
+          btnCopyCommand.style.background = "";
+          btnCopyCommand.style.color = "";
+        }, 2000);
+      }).catch(err => {
+        console.error("Clipboard copy failed:", err);
+      });
+    });
+  }
+
+  // ── 5. GPU VRAM & Training Estimator Logic ─────────────────────────────
+  const estModelSize = document.getElementById('est-model-size');
+  const estMethod = document.getElementById('est-method');
+  const estDatasetSize = document.getElementById('est-dataset-size');
+  const datasetSizeVal = document.getElementById('dataset-size-val');
+  
+  const estVramVal = document.getElementById('est-vram-val');
+  const estVramBadge = document.getElementById('est-vram-badge');
+  const estGpuVal = document.getElementById('est-gpu-val');
+  const estGpuDesc = document.getElementById('est-gpu-desc');
+  const estTimeVal = document.getElementById('est-time-val');
+  const estTimeDesc = document.getElementById('est-time-desc');
+  const estFeasibilityVal = document.getElementById('est-feasibility-val');
+  const estFeasibilityBadge = document.getElementById('est-feasibility-badge');
+
+  function formatNumber(num) {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+
+  function calculateEstimates() {
+    if (!estModelSize || !estMethod || !estDatasetSize) return;
+
+    const size = parseInt(estModelSize.value, 10); // 5, 7, 14, 32
+    const method = estMethod.value; // lora4, lora8, full16
+    const datasetSize = parseInt(estDatasetSize.value, 10);
+
+    // Update dataset display text
+    if (datasetSizeVal) {
+      datasetSizeVal.textContent = formatNumber(datasetSize);
+    }
+
+    // 1. Calculate VRAM requirement
+    let vram = 0;
+    if (method === 'lora4') {
+      vram = size * 0.7 + 2.5;
+    } else if (method === 'lora8') {
+      vram = size * 1.1 + 3.5;
+    } else if (method === 'full16') {
+      vram = size * 4.0 + 8.0;
+    }
+    vram = parseFloat(vram.toFixed(1));
+
+    if (estVramVal) {
+      estVramVal.textContent = `${vram} GB`;
+    }
+
+    // 2. Set safety badges & recommended hardware
+    let gpu = "";
+    let gpuDesc = "";
+    let safetyText = "";
+    let safetyClass = "";
+    let feasibilityVal = "";
+    let feasibilityText = "";
+    let feasibilityClass = "";
+
+    if (vram <= 12) {
+      gpu = "NVIDIA RTX 3060 / 4060 Ti (16GB)";
+      gpuDesc = "Low cost. Runs comfortably on modern standard gaming desktop setups.";
+      safetyText = "Consumer GPU Safe";
+      safetyClass = "badge-green";
+      feasibilityVal = "Low Cost";
+      feasibilityText = "Highly Feasible";
+      feasibilityClass = "badge-green";
+    } else if (vram <= 24) {
+      gpu = "NVIDIA RTX 4090 / 3090 (24GB)";
+      gpuDesc = "High-end consumer setup. Perfect for enthusiast single-GPU setups.";
+      safetyText = "Flagship GPU Required";
+      safetyClass = "badge-orange";
+      feasibilityVal = "Moderate Cost";
+      feasibilityText = "Very Feasible";
+      feasibilityClass = "badge-green";
+    } else if (vram <= 48) {
+      gpu = "NVIDIA RTX 6000 Ada / Dual RTX 3090";
+      gpuDesc = "Professional workstation setup. Requires dual consumer or pro workstation cards.";
+      safetyText = "Workstation Grade";
+      safetyClass = "badge-orange";
+      feasibilityVal = "Professional";
+      feasibilityText = "Requires Budget";
+      feasibilityClass = "badge-orange";
+    } else {
+      gpu = "NVIDIA A100 (80GB) / H100 (80GB)";
+      gpuDesc = "Data-center hardware required. Ideal for cloud training nodes (RunPod, Lambda).";
+      safetyText = "Enterprise Only";
+      safetyClass = "badge-red";
+      feasibilityVal = "Enterprise";
+      feasibilityText = "High Cost (Cloud recommended)";
+      feasibilityClass = "badge-red";
+    }
+
+    if (estVramBadge) {
+      estVramBadge.className = `est-card-badge ${safetyClass}`;
+      estVramBadge.textContent = safetyText;
+    }
+    if (estGpuVal) estGpuVal.textContent = gpu;
+    if (estGpuDesc) estGpuDesc.textContent = gpuDesc;
+
+    if (estFeasibilityVal) estFeasibilityVal.textContent = feasibilityVal;
+    if (estFeasibilityBadge) {
+      estFeasibilityBadge.className = `est-card-badge ${feasibilityClass}`;
+      estFeasibilityBadge.textContent = feasibilityText;
+    }
+
+    // 3. Estimate Training Time
+    // Base speed on RTX 4090:
+    // Qwen-7B 4-bit LoRA takes ~10 examples/sec.
+    // Scales: 4-bit LoRA: 10 ex/s, 8-bit LoRA: 6 ex/s, Full 16-bit: 1.5 ex/s.
+    // Scales with size: 7B is baseline (1x). 5B is 1.4x faster. 14B is 2x slower. 32B is 4.5x slower.
+    let baseSpeed = 10; // examples/sec for 7B 4-bit LoRA
+    if (method === 'lora8') baseSpeed = 6;
+    if (method === 'full16') baseSpeed = 1.5;
+
+    let sizeFactor = 1;
+    if (size === 5) sizeFactor = 0.7;
+    if (size === 7) sizeFactor = 1.0;
+    if (size === 14) sizeFactor = 2.0;
+    if (size === 32) sizeFactor = 4.5;
+
+    const speed = baseSpeed / sizeFactor; // examples/sec
+    const totalSecs = (datasetSize / speed) * 3; // Assume 3 epochs
+    const totalMins = Math.round(totalSecs / 60);
+
+    let timeText = "";
+    if (totalMins < 60) {
+      timeText = `~${totalMins} min`;
+    } else {
+      const hrs = Math.floor(totalMins / 60);
+      const mins = totalMins % 60;
+      timeText = `~${hrs}h ${mins}m`;
+    }
+
+    if (estTimeVal) estTimeVal.textContent = timeText;
+    if (estTimeDesc) {
+      estTimeDesc.textContent = `Calculated for 3 epochs training run on a single RTX 4090 GPU node (${speed.toFixed(1)} ex/s).`;
+    }
+  }
+
+  // Bind Listeners
+  if (estModelSize) estModelSize.addEventListener('change', calculateEstimates);
+  if (estMethod) estMethod.addEventListener('change', calculateEstimates);
+  if (estDatasetSize) {
+    estDatasetSize.addEventListener('input', calculateEstimates);
+    estDatasetSize.addEventListener('change', calculateEstimates);
+  }
+
+  // Initial trigger
+  calculateEstimates();
+
+  // Trigger initial render
+  updateGeneratedCommand();
 
 });

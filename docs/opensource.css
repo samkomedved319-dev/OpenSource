@@ -1260,3 +1260,403 @@ footer {
   .btn { width: 100%; }
   .portal-card { padding: 1.8rem; }
 }
+
+/* ── Interactive CLI Command Builder Section ───────────────────────────── */
+.builder-section {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.builder-container {
+  border-radius: 24px;
+  padding: 3rem;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  gap: 2.2rem;
+}
+
+.builder-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.5rem;
+}
+
+.checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin-top: 0.5rem;
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.checkbox-item input[type="checkbox"] {
+  accent-color: var(--banana);
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.checkbox-item label {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.builder-inputs select,
+.builder-prompt textarea {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 0.85rem 1.2rem;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  width: 100%;
+  transition: var(--transition);
+}
+
+.builder-inputs select:focus,
+.builder-prompt textarea:focus {
+  outline: none;
+  border-color: var(--banana);
+  box-shadow: 0 0 15px rgba(255, 225, 53, 0.08);
+}
+
+.builder-inputs select {
+  cursor: pointer;
+}
+
+.builder-inputs select option {
+  background: var(--bg-deep);
+  color: var(--text-primary);
+}
+
+.builder-prompt textarea {
+  resize: none;
+  height: calc(100% - 28px);
+  min-height: 150px;
+}
+
+.builder-output {
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px dashed rgba(255, 225, 53, 0.25);
+  border-radius: 16px;
+  padding: 1.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.output-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: var(--text-dim);
+}
+
+.btn-copy {
+  background: rgba(255, 225, 53, 0.08);
+  border: 1px solid rgba(255, 225, 53, 0.3);
+  color: var(--banana);
+  padding: 0.4rem 1.1rem;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.btn-copy:hover {
+  background: var(--banana);
+  color: var(--bg-dark);
+  box-shadow: 0 0 15px rgba(255, 225, 53, 0.3);
+}
+
+.output-code {
+  font-family: var(--font-mono);
+  color: var(--text-primary);
+  font-size: 1rem;
+  word-break: break-all;
+  line-height: 1.5;
+}
+
+/* ── Live Event Stream Panel ───────────────────────────────────────────── */
+.event-stream-container {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 1.2rem;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  height: 160px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  scroll-behavior: smooth;
+}
+
+.event-line {
+  line-height: 1.4;
+  word-break: break-all;
+}
+
+.event-line.system { color: var(--text-dim); }
+.event-line.handshake { color: var(--emerald); }
+.event-line.memory { color: var(--violet); }
+.event-line.workspace { color: var(--banana); }
+.event-line.mcp { color: var(--sky); }
+.event-line.agent { color: var(--rose); }
+
+/* Responsive Builder */
+@media (max-width: 800px) {
+  .builder-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+  .builder-container { padding: 1.8rem; }
+}
+
+/* ── GPU VRAM & Training Estimator Layout & Card Styles ────────────────── */
+.estimator-section {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.estimator-container {
+  border-radius: 24px;
+  padding: 3rem;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.estimator-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 3rem;
+}
+
+.estimator-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.estimator-inputs h3 {
+  font-size: 1.35rem;
+  letter-spacing: -0.5px;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.slider-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.slider-value-display {
+  font-family: var(--font-mono);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--banana);
+  text-shadow: 0 0 10px rgba(255, 225, 53, 0.3);
+}
+
+.estimator-slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.08);
+  outline: none;
+  transition: opacity .2s;
+  margin: 0.5rem 0;
+}
+
+.estimator-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--banana);
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(255, 225, 53, 0.5);
+  transition: transform 0.15s ease;
+}
+
+.estimator-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+.estimator-slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--banana);
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(255, 225, 53, 0.5);
+  transition: transform 0.15s ease;
+}
+
+.estimator-slider::-moz-range-thumb:hover {
+  transform: scale(1.2);
+}
+
+.estimator-inputs select {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 0.85rem 1.2rem;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  width: 100%;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.estimator-inputs select:focus {
+  outline: none;
+  border-color: var(--banana);
+  box-shadow: 0 0 15px rgba(255, 225, 53, 0.08);
+}
+
+.estimator-inputs select option {
+  background: var(--bg-deep);
+  color: var(--text-primary);
+}
+
+.estimator-outputs {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.estimator-outputs h3 {
+  font-size: 1.35rem;
+  letter-spacing: -0.5px;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.est-cards-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.est-card {
+  border-radius: 16px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  transition: var(--transition);
+  justify-content: space-between;
+  min-height: 140px;
+}
+
+.est-card:hover {
+  transform: translateY(-2px);
+}
+
+.est-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.est-card-icon {
+  font-size: 1.2rem;
+  color: var(--banana);
+}
+
+.est-card h4 {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-dim);
+}
+
+.est-card-value {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  font-family: var(--font-heading);
+  letter-spacing: -0.5px;
+}
+
+.est-card-value-small {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-family: var(--font-heading);
+  letter-spacing: -0.2px;
+}
+
+.est-card-desc {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.est-card-badge {
+  display: inline-block;
+  align-self: flex-start;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding: 0.25rem 0.6rem;
+  border-radius: 6px;
+}
+
+/* Badge colors */
+.badge-green {
+  color: var(--emerald);
+  background: rgba(0, 255, 178, 0.08);
+  border: 1px solid rgba(0, 255, 178, 0.15);
+}
+
+.badge-orange {
+  color: var(--banana);
+  background: rgba(255, 225, 53, 0.08);
+  border: 1px solid rgba(255, 225, 53, 0.15);
+}
+
+.badge-red {
+  color: var(--rose);
+  background: rgba(244, 63, 94, 0.08);
+  border: 1px solid rgba(244, 63, 94, 0.15);
+}
+
+/* Responsive Estimator */
+@media (max-width: 900px) {
+  .estimator-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  .estimator-container {
+    padding: 1.8rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .est-cards-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
