@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>openSource CLI — Local-First AI Coding Agent</title>
+  <!-- Modern Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Decorative Animated Background Elements -->
+  <div class="blob blob-purple"></div>
+  <div class="blob blob-yellow"></div>
+  <div class="grid-overlay"></div>
+
+  <!-- Premium Header -->
+  <header>
+    <div class="header-container glass">
+      <div class="logo">
+        <span class="logo-icon">◈</span>
+        <span class="logo-text">open<span>Source</span></span>
+      </div>
+      <nav>
+        <a href="#features">Features</a>
+        <a href="#terminal-section">Terminal</a>
+        <a href="#git-guide">GitHub Sync</a>
+        <a href="#portal" class="nav-btn-link">Launch Portal</a>
+      </nav>
+      <div class="system-status">
+        <span class="status-dot"></span>
+        <span class="status-text">Ollama Local Active</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="hero-content">
+        <div class="badge glass">◈ LOCAL-FIRST AI CODING AGENT</div>
+        <h1>The Ultimate Coding Partner, <br><span class="gradient-text">Right in Your Terminal.</span></h1>
+        <p class="hero-desc">
+          An elite, local-first AI software engineering agent. No API keys, no subscriptions, no data leaks. Powered entirely by local LLMs via Ollama, deeply integrated with your Obsidian knowledge vault.
+        </p>
+        <div class="hero-actions">
+          <a href="#portal" class="btn btn-primary">Connect Environment</a>
+          <a href="#git-guide" class="btn btn-secondary">Read Sync Guide</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Terminal & Live Demo -->
+    <section id="terminal-section" class="terminal-showcase">
+      <div class="section-header">
+        <h2>See openSource <span class="gradient-text">in Action</span></h2>
+        <p>Watch the agent ingest directories, auto-detect structures, design plans, and execute code edits.</p>
+      </div>
+
+      <div class="terminal-container glass">
+        <div class="terminal-header">
+          <div class="terminal-dots">
+            <span class="dot-red"></span>
+            <span class="dot-yellow"></span>
+            <span class="dot-green"></span>
+          </div>
+          <div class="terminal-title">powershell — opensource cli</div>
+        </div>
+        <div class="terminal-body" id="typewriter-terminal">
+          <!-- Typewriter contents injected by app.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- High-End Interactive Login / Connection Portal -->
+    <section id="portal" class="portal-section">
+      <div class="section-header">
+        <h2>Interactive <span class="gradient-text">Connection Portal</span></h2>
+        <p>Connect your local openSource agent, monitor model weights, and explore vault integration metrics.</p>
+      </div>
+
+      <div class="portal-wrapper">
+        <div class="portal-card glass" id="portal-container">
+          
+          <!-- State A: Login Portal -->
+          <div class="portal-state" id="state-login">
+            <h3>Authenticate Connection</h3>
+            <p class="subtitle">Securely bridge your terminal agent context to the visual dashboard.</p>
+            
+            <form id="login-form">
+              <div class="form-group">
+                <label for="username">Username or Agent Alias</label>
+                <input type="text" id="username" placeholder="e.g., samko" required autocomplete="off">
+              </div>
+              <div class="form-group">
+                <label for="token">Local Access Token / Passphrase</label>
+                <input type="password" id="token" placeholder="••••••••••••••••" required autocomplete="off">
+                <span class="helper-text">Defaults to local machine password or custom vault passcode.</span>
+              </div>
+              <div class="form-group-checkbox">
+                <input type="checkbox" id="persist" checked>
+                <label for="persist">Remember terminal handshake</label>
+              </div>
+              
+              <button type="submit" class="btn btn-primary btn-block" id="login-submit-btn">
+                <span class="btn-text">Establish Secure Bridge</span>
+                <span class="spinner-inline hidden"></span>
+              </button>
+            </form>
+            
+            <div class="connection-hint">
+              <p>Handshake relies on local port <code>3100</code>. Start daemon with <code>opensource gateway</code>.</p>
+            </div>
+          </div>
+
+          <!-- State B: Gorgeous Visual Dashboard (Hidden by default, morphs in on login) -->
+          <div class="portal-state hidden" id="state-dashboard">
+            <div class="dashboard-header">
+              <div class="dashboard-profile">
+                <div class="avatar">◈</div>
+                <div class="profile-info">
+                  <h4 id="user-display">samko</h4>
+                  <p class="status-badge">Handshake Active</p>
+                </div>
+              </div>
+              <button class="btn-disconnect" id="disconnect-btn">Disconnect Bridge</button>
+            </div>
+
+            <div class="dashboard-grid">
+              
+              <!-- Card 1: Active LLM Engine -->
+              <div class="dash-card glass">
+                <span class="dash-icon">⚙</span>
+                <h5>AI Model Layer</h5>
+                <div class="model-selection">
+                  <div class="model-item active">
+                    <span class="model-dot"></span>
+                    <span class="model-name">Source PRO</span>
+                    <span class="model-status">Optimal</span>
+                  </div>
+                  <div class="model-item">
+                    <span class="model-dot"></span>
+                    <span class="model-name">Source flash</span>
+                    <span class="model-status">Fastest</span>
+                  </div>
+                  <div class="model-item">
+                    <span class="model-dot"></span>
+                    <span class="model-name">Source Ultra</span>
+                    <span class="model-status">Heavy</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card 2: Obsidian Vault Link -->
+              <div class="dash-card glass">
+                <span class="dash-icon">✦</span>
+                <h5>Obsidian Vault Sync</h5>
+                <div class="sync-metrics">
+                  <div class="metric">
+                    <span class="metric-val">142</span>
+                    <span class="metric-label">Notes Indexed</span>
+                  </div>
+                  <div class="metric">
+                    <span class="metric-val">34</span>
+                    <span class="metric-label">Tags Cataloged</span>
+                  </div>
+                </div>
+                <div class="vault-path-info">
+                  <code>~/Documents/ObsidianVault</code>
+                </div>
+                <div class="sync-progressbar">
+                  <div class="sync-fill" style="width: 100%;"></div>
+                </div>
+                <span class="sync-status-msg">✔ Index fully aligned (100%)</span>
+              </div>
+
+              <!-- Card 3: Memory Layers -->
+              <div class="dash-card glass">
+                <span class="dash-icon">⚿</span>
+                <h5>Active Context Memory</h5>
+                <div class="memory-layers">
+                  <span class="layer-pill">opensource-md</span>
+                  <span class="layer-pill">memory-md</span>
+                  <span class="layer-pill">obsidian-vault</span>
+                  <span class="layer-pill">conversation</span>
+                </div>
+                <p class="memory-usage">Storage: <strong>12.4 KB</strong> / 1000 entries</p>
+              </div>
+
+              <!-- Card 4: Codebase Scanner Status -->
+              <div class="dash-card glass">
+                <span class="dash-icon">⚡</span>
+                <h5>Project Scan Structure</h5>
+                <p class="scan-primary-label">Detected Primary Folder:</p>
+                <div class="primary-dir-badge"><code>./src</code> (Primary)</div>
+                <p class="scan-files-label">Workspace Languages:</p>
+                <div class="lang-bars">
+                  <div class="lang-bar"><span class="lang-name">TS</span><span class="bar-outer"><span class="bar-inner" style="width: 75%;"></span></span><span class="lang-pct">75%</span></div>
+                  <div class="lang-bar"><span class="lang-name">JS</span><span class="bar-outer"><span class="bar-inner" style="width: 15%;"></span></span><span class="lang-pct">15%</span></div>
+                  <div class="lang-bar"><span class="lang-name">MD</span><span class="bar-outer"><span class="bar-inner" style="width: 10%;"></span></span><span class="lang-pct">10%</span></div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Comprehensive GitHub Sync & Run Guide -->
+    <section id="git-guide" class="guide-section">
+      <div class="section-header">
+        <h2>How to Run & <span class="gradient-text">Sync to GitHub</span></h2>
+        <p>Follow our comprehensive step-by-step guides to deploy the CLI and back up your Obsidian vault.</p>
+      </div>
+
+      <div class="guides-container">
+        
+        <!-- Accordion 1: Running the openSource CLI -->
+        <div class="accordion-item glass">
+          <div class="accordion-trigger">
+            <span class="accordion-num">01</span>
+            <h4>How to Run openSource CLI Locally</h4>
+            <span class="accordion-arrow">▼</span>
+          </div>
+          <div class="accordion-content">
+            <p>Make sure you have Node.js (v18+) and Ollama installed. Run the following commands:</p>
+            <pre><code># 1. Start your local Ollama server
+ollama serve
+
+# 2. Pull the default Source models (or map to Qwen2.5-Coder)
+ollama pull qwen2.5-coder:7b
+
+# 3. Launch openSource globally
+npm install -g opensource-cli
+opensource
+
+# Alternatively, run REPL in a specific project workdir
+opensource --workdir ./my-project</code></pre>
+            <p>Once loaded, type <code>/help</code> in the flat terminal UI to see the list of active slash commands.</p>
+          </div>
+        </div>
+
+        <!-- Accordion 2: Uploading openSource CLI to GitHub -->
+        <div class="accordion-item glass">
+          <div class="accordion-trigger">
+            <span class="accordion-num">02</span>
+            <h4>How to Upload Your CLI Agent Workspace to GitHub</h4>
+            <span class="accordion-arrow">▼</span>
+          </div>
+          <div class="accordion-content">
+            <p>Pushing your project directory to GitHub is simple and allows your local agent to track history:</p>
+            <pre><code># 1. Initialize Git in your project root
+git init
+
+# 2. Create a standard .gitignore file to exclude heavy files
+echo "node_modules/\ndist/\n.env\n.DS_Store" > .gitignore
+
+# 3. Stage and commit your files
+git add .
+git commit -m "feat: initialize project with openSource CLI"
+
+# 4. Create your remote repository on GitHub, then link and push
+git remote add origin https://github.com/your-username/your-repo-name.git
+git branch -M main
+git push -u origin main</code></pre>
+            <p>Your openSource CLI can now automatically execute AI commit diffs using the <code>/commit</code> command!</p>
+          </div>
+        </div>
+
+        <!-- Accordion 3: Connecting & Synching Obsidian Vault to GitHub -->
+        <div class="accordion-item glass">
+          <div class="accordion-trigger">
+            <span class="accordion-num">03</span>
+            <h4>How to Upload and Sync Obsidian Vault to GitHub</h4>
+            <span class="accordion-arrow">▼</span>
+          </div>
+          <div class="accordion-content">
+            <p>Keep your Obsidian Knowledge Vault securely synced to GitHub. You have two highly efficient methods:</p>
+            
+            <div class="tab-container">
+              <h5>Method A: Using the Obsidian Git Plugin (Recommended)</h5>
+              <ol>
+                <li>Open Obsidian, navigate to <strong>Settings</strong> > <strong>Community Plugins</strong>, search for <strong>Obsidian Git</strong>, and click install.</li>
+                <li>Ensure Git is installed on your local computer. Initialize a Git repository inside your vault folder:
+                  <pre><code>cd "~/Documents/ObsidianVault"
+git init
+git remote add origin https://github.com/your-username/my-obsidian-vault.git</code></pre>
+                </li>
+                <li>In Obsidian Git settings, configure **Auto backup interval (minutes)** (e.g., every 30 minutes) and enable **Push on backup**.</li>
+                <li>The plugin will silently auto-commit and push all your notes in the background!</li>
+              </ol>
+              
+              <h5 style="margin-top: 1.5rem;">Method B: Automatic Scripted Backup (Shell Script)</h5>
+              <p>You can create a fast automation script inside your vault directory (e.g., <code>sync_vault.bat</code> on Windows or <code>sync_vault.sh</code> on macOS/Linux):</p>
+              <pre><code>@echo off
+cd "C:\Users\samko\Desktop\OpenSource\Obsidian Vault"
+git add .
+git commit -m "auto-vault backup: %date% %time%"
+git push origin main</code></pre>
+              <p>You can bind this to Windows Task Scheduler or cron to run hourly, keeping your vault completely backed up.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- Premium Footer -->
+  <footer>
+    <div class="footer-container">
+      <div class="footer-brand">
+        <span class="logo-icon">◈</span>
+        <span class="logo-text">open<span>Source</span></span>
+      </div>
+      <p class="copyright">&copy; 2026 openSource CLI AI. Built premium. Compatible with GitHub Pages.</p>
+    </div>
+  </footer>
+
+  <!-- Script -->
+  <script src="app.js"></script>
+</body>
+</html>

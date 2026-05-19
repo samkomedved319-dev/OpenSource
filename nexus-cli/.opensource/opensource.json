@@ -1,0 +1,77 @@
+{
+  "provider": "ollama",
+  "model": "llama3.2",
+  "fallbackModels": [
+    "llama3.2",
+    "mistral",
+    "qwen2.5-coder",
+    "deepseek-r1"
+  ],
+  "memory": {
+    "enabled": true,
+    "layers": [
+      "opensource-md",
+      "memory-md",
+      "obsidian-vault",
+      "conversation-history"
+    ],
+    "maxEntries": 1000
+  },
+  "skills": {
+    "enabled": true,
+    "paths": [
+      "./.opensource/skills",
+      "~/.opensource/skills"
+    ],
+    "autoCreate": true
+  },
+  "tools": {
+    "allowed": [
+      "*"
+    ],
+    "denied": [],
+    "approvalRequired": [
+      "shell",
+      "browser_navigate",
+      "file_write"
+    ]
+  },
+  "hooks": {
+    "enabled": true,
+    "paths": [
+      "./.opensource/hooks",
+      "~/.opensource/hooks"
+    ]
+  },
+  "mcp": {
+    "enabled": true,
+    "servers": []
+  },
+  "agent": {
+    "maxIterations": 100,
+    "planningMode": "auto",
+    "autoApprove": [],
+    "contextWindow": 32768
+  },
+  "obsidian": {
+    "enabled": true,
+    "vaultPath": "",
+    "excludePatterns": [
+      ".git",
+      ".trash",
+      ".obsidian"
+    ],
+    "indexOnStart": true
+  },
+  "gateway": {
+    "enabled": false,
+    "port": 3100,
+    "heartbeatInterval": 1800
+  },
+  "tui": {
+    "theme": "dark",
+    "showToolCalls": true,
+    "showThinking": true,
+    "compactMode": false
+  }
+}

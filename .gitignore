@@ -1,0 +1,63 @@
+# openSource Monorepo GitIgnore
+# ----------------------------------------
+
+# Dependency folders
+node_modules/
+jspm_packages/
+web_modules/
+
+# Build and distribution files
+dist/
+build/
+out/
+bin/
+obj/
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Environment and secrets
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.pem
+*.key
+
+# Logs and system files
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-debug.log*
+.DS_Store
+Thumbs.db
+
+# IDEs and editors
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Testing and coverage
+coverage/
+.nyc_output/
+.vitest/
+
+# Obsidian Vault Specifics
+Obsidian Vault/.obsidian/workspace
+Obsidian Vault/.obsidian/workspace.json
+Obsidian Vault/.obsidian/backups/
+Obsidian Vault/.obsidian/plugins/obsidian-git/
+
+# CLI temp files
+nexus-cli/sessions/
+nexus-cli/memory/learned/
+nexus-cli/db.sqlite
