@@ -38,8 +38,21 @@ const C = {
   removed:    chalk.hex('#F87171'),
   hunk:       chalk.hex('#60A5FA').dim,
 };
+function supportsUnicode() {
+  if (process.platform !== 'win32') {
+    return process.env.TERM !== 'linux';
+  }
+  return Boolean(
+    process.env.WT_SESSION ||
+    process.env.TERMINUS_SUBLIME ||
+    process.env.VSCODE_GIT_ASKPASS_EXTRA_ARGS ||
+    process.env.TERM_PROGRAM === 'vscode' ||
+    process.env.TERM === 'xterm-256color' ||
+    process.env.TERM === 'alacritty'
+  );
+}
 
-const SYMBOLS = {
+const SYMBOLS = supportsUnicode() ? {
   dot: '·',
   bullet: '•',
   success: '✔',
@@ -48,6 +61,15 @@ const SYMBOLS = {
   warning: '⚠',
   arrow: '›',
   line: '│',
+} : {
+  dot: '.',
+  bullet: '*',
+  success: '+',
+  error: 'x',
+  info: 'i',
+  warning: '!',
+  arrow: '>',
+  line: '|',
 };
 
 // ── Helper: Inline Markdown Formatter ───────────────────────────────────────
@@ -143,6 +165,9 @@ export class TUIRenderer {
   private streamBuffer = '';
   private isStreaming = false;
   private currentActiveLine = '';
+  private thinkingBuffer = '';
+  private isThinkingStreaming = false;
+  private thinkingLineStarted = false;
 
   constructor(options: TUIOptions = {}) {
     this.options = {
@@ -211,6 +236,11 @@ export class TUIRenderer {
     process.stdout.write(`\n  ${C.banana('You')} ${C.dim(SYMBOLS.arrow)} `);
   }
 
+  getPromptString(): string {
+    this.clearActiveLine();
+    return `\n  ${C.banana('You')} ${C.dim(SYMBOLS.arrow)} `;
+  }
+
   printUserPrompt(prompt: string): void {
     this.clearActiveLine();
     console.log(`\n  ${C.banana('You')} ${C.dim(SYMBOLS.arrow)} ${C.bold(prompt)}`);
@@ -236,6 +266,48 @@ export class TUIRenderer {
     if (this.isStreaming) process.stdout.write('\n');
     this.isStreaming = false;
     this.streamBuffer = '';
+    return full;
+  }
+
+  startThinkingStream(): void {
+    this.stopThinking();
+    if (!this.options.showThinking || this.options.compactMode) return;
+    this.isThinkingStreaming = true;
+    this.thinkingBuffer = '';
+    this.thinkingLineStarted = false;
+    console.log('');
+    console.log(`  ${C.dim('⠏ thinking:')}`);
+  }
+
+  streamThinkingToken(token: string): void {
+    if (!this.options.showThinking || this.options.compactMode) return;
+    this.thinkingBuffer += token;
+    for (let i = 0; i < token.length; i++) {
+      const char = token[i];
+      if (!this.thinkingLineStarted) {
+        process.stdout.write(`    ${C.dim(SYMBOLS.line)} `);
+        this.thinkingLineStarted = true;
+      }
+      if (char === '\n') {
+        process.stdout.write('\n');
+        this.thinkingLineStarted = false;
+      } else {
+        process.stdout.write(C.dim(C.italic(char)));
+      }
+    }
+  }
+
+  endThinkingStream(): string {
+    const full = this.thinkingBuffer;
+    if (this.isThinkingStreaming) {
+      if (this.thinkingLineStarted) {
+        process.stdout.write('\n');
+      }
+      console.log('');
+    }
+    this.isThinkingStreaming = false;
+    this.thinkingBuffer = '';
+    this.thinkingLineStarted = false;
     return full;
   }
 
@@ -510,6 +582,7 @@ export class TUIRenderer {
       ['/doctor', 'Run doctor diagnostics check'],
       ['/add <file>', 'Load a specific file into conversational context'],
       ['/commit [msg]', 'Generate AI commit message and commit changes'],
+      ['/preview <cmd>', 'Preview suite for plans, commits, files, status, tools, website'],
       ['/sessions', 'List history logs and sessions'],
       ['/agents', 'Show active agent orchestrator'],
       ['/exit', 'Close CLI agent session'],

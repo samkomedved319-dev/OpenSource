@@ -382,6 +382,7 @@ export interface NexusConfig {
     showToolCalls: boolean;
     showThinking: boolean;
     compactMode: boolean;
+    showWorkspaceTree?: boolean;
   };
 }
 

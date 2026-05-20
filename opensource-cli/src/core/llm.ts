@@ -15,6 +15,7 @@ export interface LLMOptions {
   signal?: AbortSignal;
   stream?: boolean;
   onToken?: (token: string) => void;
+  onThinkingToken?: (token: string) => void;
 }
 
 const PROVIDER_BASE_URLS: Record<ProviderName, string | undefined> = {
@@ -184,8 +185,76 @@ export class LLMProvider {
       throw new Error(this.buildConnectionError(provider));
     }
 
-    const formattedMessages = this.formatMessages(messages);
-    const tools = options.tools ? this.formatTools(options.tools) : undefined;
+    let finalMessages = [...messages];
+    let finalTools = options.tools ? this.formatTools(options.tools) : undefined;
+
+    if (provider === 'ollama' && options.tools && options.tools.length > 0) {
+      const toolDescriptions = options.tools.map(t => {
+        return `- **${t.name}**: ${t.description}\n  Parameters JSON Schema:\n${JSON.stringify(t.parameters, null, 2)}`;
+      }).join('\n\n');
+
+      const ollamaToolInstructions = `\n\n## Tool Calling Instructions
+You have access to a set of local tools that you can call to perform actions or read information.
+To call a tool, you MUST output a single XML block in the following exact format:
+<tool_call>
+{
+  "name": "tool_name",
+  "input": {
+    "key": "value"
+  }
+}
+</tool_call>
+
+Rules:
+1. You can only call ONE tool at a time.
+2. Do NOT output any other text or tool calls after the </tool_call> tag.
+3. If you want to reply with normal conversational text, just write standard text WITHOUT any <tool_call> tags.
+4. Verify that the JSON inside <tool_call> is valid and matches the parameter schema.
+
+Available Tools:
+${toolDescriptions}`;
+
+      // Append to the system message if it exists, otherwise prepend a new system message
+      const systemMsgIdx = finalMessages.findIndex(m => m.role === 'system');
+      if (systemMsgIdx !== -1) {
+        finalMessages[systemMsgIdx] = {
+          ...finalMessages[systemMsgIdx],
+          content: finalMessages[systemMsgIdx].content + ollamaToolInstructions
+        };
+      } else {
+        finalMessages.unshift({
+          id: `sys-${Date.now()}`,
+          role: 'system',
+          content: ollamaToolInstructions,
+          timestamp: new Date()
+        });
+      }
+
+      // Bypass native OpenAI tools parameter for Ollama to prevent hanging and JSON schema leaking
+      finalTools = undefined;
+
+      // Convert tool role messages to user role messages for Ollama.
+      // Without the native tools parameter, Ollama models don't understand
+      // the 'tool' role. Converting to user messages with clear framing
+      // preserves the tool result context naturally.
+      finalMessages = finalMessages.map(msg => {
+        if (msg.role === 'tool') {
+          const toolName = msg.toolName || 'unknown';
+          const resultContent = typeof msg.content === 'string'
+            ? msg.content
+            : JSON.stringify(msg.content);
+          return {
+            ...msg,
+            role: 'user' as const,
+            content: `[Tool Result for "${toolName}"]:\n${resultContent}`,
+          };
+        }
+        return msg;
+      });
+    }
+
+    const formattedMessages = this.formatMessages(finalMessages);
+    const tools = finalTools;
 
     // Use streaming if a token callback is provided and no tools (tools require non-streaming)
     const canStream = !!options.onToken && (!tools || tools.length === 0);
@@ -196,7 +265,7 @@ export class LLMProvider {
     for (let attempt = 0; attempt <= maxRetries; attempt++) {
       try {
         if (canStream && options.onToken) {
-          return await this.chatStreaming(client, model, formattedMessages, tools, options);
+          return await this.chatStreaming(client, model, formattedMessages, tools, options, provider);
         } else {
           return await this.chatBlocking(client, model, formattedMessages, tools, options, provider);
         }
@@ -242,6 +311,7 @@ export class LLMProvider {
     messages: OpenAI.Chat.Completions.ChatCompletionMessageParam[],
     tools: OpenAI.Chat.Completions.ChatCompletionTool[] | undefined,
     options: LLMOptions,
+    provider: ProviderName,
   ): Promise<LLMResponse> {
     const stream = await client.chat.completions.create(
       {
@@ -256,19 +326,68 @@ export class LLMProvider {
     );
 
     let fullContent = '';
+    let fullThinking = '';
+    let isThinking = false;
     const toolCallsMap = new Map<number, { id: string; name: string; args: string }>();
 
     for await (const chunk of stream) {
       const delta = chunk.choices[0]?.delta;
+      if (!delta) continue;
 
-      // Text token
-      if (delta?.content) {
-        fullContent += delta.content;
-        options.onToken?.(delta.content);
+      // 1. Explicit reasoning_content (Ollama/DeepSeek API reasoning property)
+      const reasoning = (delta as unknown as { reasoning_content?: string })?.reasoning_content;
+      if (reasoning) {
+        fullThinking += reasoning;
+        options.onThinkingToken?.(reasoning);
+        continue;
+      }
+
+      // 2. Standard content streaming
+      if (delta.content) {
+        let chunkText = delta.content;
+
+        // Check for `<think>` tag introduction
+        if (chunkText.includes('<think>')) {
+          isThinking = true;
+          const parts = chunkText.split('<think>');
+          if (parts[0]) {
+            fullContent += parts[0];
+            options.onToken?.(parts[0]);
+          }
+          if (parts[1]) {
+            fullThinking += parts[1];
+            options.onThinkingToken?.(parts[1]);
+          }
+          continue;
+        }
+
+        // Check for `</think>` tag closing
+        if (chunkText.includes('</think>')) {
+          isThinking = false;
+          const parts = chunkText.split('</think>');
+          if (parts[0]) {
+            fullThinking += parts[0];
+            options.onThinkingToken?.(parts[0]);
+          }
+          if (parts[1]) {
+            fullContent += parts[1];
+            options.onToken?.(parts[1]);
+          }
+          continue;
+        }
+
+        // Handle active state
+        if (isThinking) {
+          fullThinking += chunkText;
+          options.onThinkingToken?.(chunkText);
+        } else {
+          fullContent += chunkText;
+          options.onToken?.(chunkText);
+        }
       }
 
       // Tool call delta accumulation
-      if (delta?.tool_calls) {
+      if (delta.tool_calls) {
         for (const tc of delta.tool_calls) {
           const idx = tc.index;
           if (!toolCallsMap.has(idx)) {
@@ -289,13 +408,37 @@ export class LLMProvider {
       } catch { /* skip malformed */ }
     }
 
+    let cleanedContent = fullContent;
+    const finalToolCalls = [...toolCalls];
+
+    if (provider === 'ollama' && cleanedContent.includes('<tool_call>')) {
+      const toolCallRegex = /<tool_call>([\s\S]*?)<\/tool_call>/g;
+      let match;
+      while ((match = toolCallRegex.exec(cleanedContent)) !== null) {
+        const jsonStr = match[1].trim();
+        try {
+          const parsed = JSON.parse(jsonStr);
+          if (parsed && typeof parsed === 'object' && parsed.name) {
+            finalToolCalls.push({
+              id: `call-${Math.random().toString(36).slice(2, 10)}`,
+              name: parsed.name,
+              input: parsed.input || parsed.arguments || {},
+            });
+          }
+        } catch (e) {
+          console.warn("Failed to parse tool call JSON from streamed text:", jsonStr, e);
+        }
+      }
+      cleanedContent = cleanedContent.replace(/<tool_call>[\s\S]*?<\/tool_call>/g, '').trim();
+    }
+
     return {
       id: `stream-${Date.now()}`,
-      content: fullContent,
-      toolCalls,
-      thinking: undefined,
+      content: cleanedContent,
+      toolCalls: finalToolCalls,
+      thinking: fullThinking.trim() || undefined,
       usage: { inputTokens: 0, outputTokens: 0, cacheReadTokens: 0, cacheWriteTokens: 0, totalCost: 0 },
-      stopReason: toolCalls.length > 0 ? 'tool_use' : 'end_turn',
+      stopReason: finalToolCalls.length > 0 ? 'tool_use' : 'end_turn',
     };
   }
 
@@ -360,14 +503,29 @@ export class LLMProvider {
     }));
   }
 
+  private extractThinking(content: string, reasoningContent?: string): { content: string; thinking?: string } {
+    if (reasoningContent) {
+      return { content, thinking: reasoningContent };
+    }
+
+    const thinkMatch = content.match(/<think>([\s\S]*?)<\/think>/);
+    if (thinkMatch) {
+      const thinking = thinkMatch[1].trim();
+      const cleanedContent = content.replace(/<think>[\s\S]*?<\/think>/, '').trim();
+      return { content: cleanedContent, thinking };
+    }
+
+    return { content };
+  }
+
   private parseResponse(
     response: OpenAI.Chat.Completions.ChatCompletion,
-    _provider: ProviderName,
+    provider: ProviderName,
   ): LLMResponse {
     const choice  = response.choices[0];
     const message = choice.message;
 
-    const toolCalls: ToolCall[] = (message.tool_calls || []).map(tc => ({
+    let toolCalls: ToolCall[] = (message.tool_calls || []).map(tc => ({
       id:    tc.id,
       name:  tc.function.name,
       input: JSON.parse(tc.function.arguments || '{}'),
@@ -381,13 +539,40 @@ export class LLMProvider {
       totalCost:        0,
     };
 
+    // Support thinking output extraction
+    const reasoningContent = (message as unknown as { reasoning_content?: string }).reasoning_content;
+    let { content: cleanedContent, thinking } = this.extractThinking(message.content || '', reasoningContent);
+
+    // If provider is ollama, parse text-based tool calls
+    if (provider === 'ollama' && cleanedContent.includes('<tool_call>')) {
+      const toolCallRegex = /<tool_call>([\s\S]*?)<\/tool_call>/g;
+      let match;
+      while ((match = toolCallRegex.exec(cleanedContent)) !== null) {
+        const jsonStr = match[1].trim();
+        try {
+          const parsed = JSON.parse(jsonStr);
+          if (parsed && typeof parsed === 'object' && parsed.name) {
+            toolCalls.push({
+              id: `call-${Math.random().toString(36).slice(2, 10)}`,
+              name: parsed.name,
+              input: parsed.input || parsed.arguments || {},
+            });
+          }
+        } catch (e) {
+          console.warn("Failed to parse tool call JSON from text:", jsonStr, e);
+        }
+      }
+      // Remove <tool_call> blocks from cleanedContent
+      cleanedContent = cleanedContent.replace(/<tool_call>[\s\S]*?<\/tool_call>/g, '').trim();
+    }
+
     return {
       id:         response.id,
-      content:    message.content || '',
+      content:    cleanedContent,
       toolCalls,
-      thinking:   undefined,
+      thinking:   thinking,
       usage,
-      stopReason: choice.finish_reason === 'tool_calls'  ? 'tool_use'   :
+      stopReason: toolCalls.length > 0 ? 'tool_use' : 
                   choice.finish_reason === 'length'      ? 'max_tokens' : 'end_turn',
     };
   }

@@ -126,6 +126,7 @@ program
   .option('--verbose', 'Show verbose output')
   .option('--compact', 'Use compact TUI mode')
   .option('--no-tui', 'Disable rich TUI output')
+  .option('--no-scan', 'Disable workspace structure scan on startup')
   .option('--agent <agent>', 'Agent to use', 'main')
   .option('--session <session>', 'Resume existing session')
   .action(async (prompt: string | undefined, options: Record<string, unknown>) => {
@@ -164,8 +165,10 @@ program
       tui.printStartup(pkg.version, config);
 
       // Print visual workspace representation
-      console.log(`  ${chalk.hex('#FFE135')('◈')} ${chalk.bold('Detected Workspace Structure:')}`);
-      console.log(scan.treeString.split('\n').map(line => `    ${chalk.dim(line)}`).join('\n') + '\n');
+      if (options.scan !== false && config.tui.showWorkspaceTree !== false) {
+        console.log(`  ${chalk.hex('#FFE135')('◈')} ${chalk.bold('Detected Workspace Structure:')}`);
+        console.log(scan.treeString.split('\n').map(line => `    ${chalk.dim(line)}`).join('\n') + '\n');
+      }
 
       if (prompt) {
         await agent.run(prompt);

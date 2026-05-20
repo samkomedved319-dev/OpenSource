@@ -75,6 +75,7 @@ export const DEFAULT_CONFIG: NexusConfig = {
     showToolCalls: true,
     showThinking: true,
     compactMode: false,
+    showWorkspaceTree: true,
   },
 };
 
