@@ -1,131 +1,179 @@
-# OpenSource
+# OpenSource CLI
 
 > **The Ultimate Local-First AI Coding Agent**
 >
-> No API keys. No cloud. Runs on your machine. Deep Obsidian Vault integration. Self-improving skills. Multi-agent orchestration.
+> No API keys. No cloud. Runs entirely on your machine. Deep Obsidian Vault integration. Self-improving skills. Multi-agent orchestration.
 
-## One Command
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+![Version](https://img.shields.io/badge/version-1.1.0-blue)
+![Node](https://img.shields.io/badge/node-%3E%3D20-brightgreen)
 
-```bash
-npm run run
-```
-
-That's it. Installs, builds, and starts.
+---
 
 ## Quick Start
 
 ```bash
-# Clone
-git clone https://github.com/your-org/opensource.git
-cd opensource
+# Install globally
+npm install -g opensource-cli
 
-# One command to run
-npm run run
+# Make sure Ollama is running
+ollama serve
 
-# Or with a prompt
-npm run run -- "Explain this codebase"
-
-# Dashboard
-npm run run -- dashboard
-
-# Doctor
-npm run run -- doctor
+# Start your AI coding agent
+opensource
 ```
 
-## What It Does
+That's it. No API keys. No cloud accounts. Just your terminal and a local LLM.
 
-OpenSource is a **terminal-first AI coding agent** that runs entirely on your machine. It reads your codebase, edits files, runs commands, manages git, and learns from experience — all locally.
+```bash
+# One-shot mode
+opensource "Explain this codebase"
 
-### Core Features
+# Interactive REPL
+opensource
+
+# Auto-approve tool execution
+opensource --auto "Refactor the auth module"
+
+# Skip workspace scan
+opensource --no-scan
+
+# Check your setup
+opensource doctor
+
+# Visual dashboard
+opensource dashboard
+```
+
+---
+
+## What It Is
+
+OpenSource is a **terminal-first AI coding agent** that runs entirely on your machine. It reads your codebase, edits files, runs commands, manages git, and learns from experience — all locally via Ollama.
+
+No data leaves your computer. No subscriptions. No rate limits.
+
+---
+
+## Core Features
 
 | Feature | Description |
 |---------|-------------|
 | **Local-First** | Ollama by default. Zero API keys. Zero cloud dependency. |
+| **Workspace Scan** | Visual directory tree on startup (toggle with `--no-scan`) |
 | **Obsidian Vault** | Read, write, search, and navigate your personal knowledge base |
 | **Self-Improving Skills** | Creates reusable skills from repeated patterns |
 | **Multi-Agent** | Spawn sub-agents for parallel task execution |
 | **Memory System** | 4-layer memory: project config, learned patterns, Obsidian, conversations |
-| **22+ Tools** | Files, shell, search, web, git, browser, memory, skills, agents, Obsidian |
+| **28+ Tools** | Files, shell, search, web, git, browser, memory, skills, agents, Obsidian |
 | **Hooks** | Pre/post execution validation, safety checks, rate limiting |
 | **MCP** | Connect external tool servers via Model Context Protocol |
-| **Gateway** | Run as a persistent daemon with heartbeat and WebSocket API |
+| **Gateway** | Run as a persistent daemon with REST API endpoints |
+| **Thinking Stream** | Real-time model reasoning visible in the terminal |
+| **Tool Calling** | Prompt-based XML `<tool_call>` engine for 100% local model compatibility |
 
-### 22 Built-in Tools
+---
 
-**Files:** `read_file` · `write_file` · `edit_file` · `read_multiple_files` · `list_directory` · `file_search`
+## What's New in v1.1.0
 
-**Shell:** `shell`
+- **Workspace Scan Toggle** — Configurable via `tui.showWorkspaceTree` in config or `--no-scan` CLI flag
+- **Ollama Tool-Calling Fix** — Prompt-based XML `<tool_call>` engine replaces native API tools parameter, completely eliminating hangs and JSON schema leaking on small local models
+- **Thinking Streaming** — Real-time `reasoning_content` (Ollama) and `<think>` tag extraction with live TUI output
+- **`/preview` Command** — Preview suite for plans, commits, files, status, tools, and website
+- **Gateway REST API** — New endpoints: `/api/doctor`, `/api/config`, `/api/models/pull`, `/api/workspace`
+- **Unicode Fallback** — Terminal symbols gracefully degrade on non-Unicode terminals
+- **Improved Error Messages** — Step-by-step actionable guidance for connection failures
 
-**Search:** `search_files` · `find_symbol`
+---
 
-**Web:** `web_search` · `fetch_url`
-
-**Git:** `git` · `git_status`
-
-**Browser:** `browser_navigate`
-
-**Memory:** `save_memory` · `search_memory`
-
-**Skills:** `create_skill` · `list_skills`
-
-**Agents:** `spawn_agent` · `parallel_agents`
-
-**Obsidian:** `obsidian_read_note` · `obsidian_write_note` · `obsidian_search_notes` · `obsidian_list_notes` · `obsidian_find_backlinks` · `obsidian_find_links` · `obsidian_graph` · `obsidian_reindex`
-
-## Commands
-
-```bash
-# Interactive session
-opensource
-
-# One-shot
-opensource "Fix the auth bug"
-
-# Plan first
-opensource --plan "Add user authentication"
-
-# Auto-approve
-opensource --auto "Refactor the API"
-
-# Dashboard
-opensource dashboard
-
-# Check config
-opensource doctor
-
-# Initialize in project
-opensource init
-
-# Gateway daemon
-opensource gateway
-
-# List agents
-opensource agents list
-
-# List skills
-opensource skills list
-
-# Show memory
-opensource memory show
-```
-
-## Slash Commands (Interactive)
+## CLI Options
 
 ```
-/help              Show help
+Usage: opensource [options] [command] [prompt]
+
+Arguments:
+  prompt                     Initial prompt or question
+
+Options:
+  -V, --version              Output version number
+  -w, --workdir <dir>        Working directory
+  -m, --model <model>        Model to use (e.g., llama3.2, qwen2.5-coder)
+  -p, --provider <provider>  LLM provider (ollama, anthropic, openai, etc.)
+  --vault <path>             Obsidian vault path
+  --plan                     Show plan before executing
+  --auto                     Auto-approve all tool calls
+  --verbose                  Show verbose diagnostics
+  --compact                  Use compact TUI mode
+  --no-tui                   Disable rich TUI output
+  --no-scan                  Disable workspace structure scan on startup
+  --agent <agent>            Agent profile to use (default: main)
+  --session <session>        Resume an existing session
+
+Commands:
+  dashboard     Show session dashboard
+  doctor        Check configuration and environment
+  gateway       Start gateway daemon
+  agents        Manage agent profiles
+  skills        Manage skills
+  memory        Manage memory
+  sessions      Manage sessions
+  init          Initialize OpenSource in current project
+  notes [query] Quick Obsidian vault search
+
+Aliases: opensource, os
+```
+
+---
+
+## Slash Commands (Interactive Mode)
+
+```
+/help              Display help
 /clear             Clear context
 /plan <goal>       Plan before executing
-/tools             List tools
+/tools             List all tools
 /skills            List skills
-/memory            Show memory
+/memory            Show memory layers
 /model [name]      Change model
 /vault             Browse Obsidian vault
+/notes <query>     Search Obsidian notes
+/think             Toggle thinking stream display
+/status            Show system configuration
+/doctor            Run diagnostics
+/dashboard         Show dashboard
+/add <file>        Load file into context
+/commit [msg]      AI commit with diff preview
+/preview <cmd>     Preview: plan, commit, file, status, tools, website
 /sessions          List sessions
 /agents            List agents
-/dashboard         Show dashboard
-/abort             Stop execution
 /exit              Exit
 ```
+
+---
+
+## 28 Built-in Tools
+
+**Files (6):** `read_file` · `write_file` · `edit_file` · `read_multiple_files` · `list_directory` · `file_search`
+
+**Shell (1):** `shell`
+
+**Search (2):** `search_files` · `find_symbol`
+
+**Web (2):** `web_search` · `fetch_url`
+
+**Git (2):** `git` · `git_status`
+
+**Browser (1):** `browser_navigate`
+
+**Memory (2):** `save_memory` · `search_memory`
+
+**Skills (2):** `create_skill` · `list_skills`
+
+**Agents (2):** `spawn_agent` · `parallel_agents`
+
+**Obsidian (8):** `obsidian_read_note` · `obsidian_write_note` · `obsidian_search_notes` · `obsidian_list_notes` · `obsidian_find_backlinks` · `obsidian_find_links` · `obsidian_graph` · `obsidian_reindex`
+
+---
 
 ## Configuration
 
@@ -133,11 +181,11 @@ opensource memory show
 
 ```bash
 # Install Ollama: https://ollama.com
-ollama pull llama3.2
+ollama pull qwen2.5-coder:7b
 opensource
 ```
 
-### Optional: Cloud
+### Optional: Cloud Providers
 
 ```bash
 export ANTHROPIC_API_KEY=sk-...
@@ -150,9 +198,9 @@ export OPENROUTER_API_KEY=sk-...
 opensource -p openrouter -m openai/gpt-4o
 ```
 
-### Obsidian Vault
+### Obsidian Vault Integration
 
-Auto-detected. Or set in `.opensource/opensource.json`:
+Auto-detected, or set in `.opensource/opensource.json`:
 
 ```json
 {
@@ -163,59 +211,90 @@ Auto-detected. Or set in `.opensource/opensource.json`:
 }
 ```
 
-### Full Config
+### Full Configuration
 
 ```json
 {
   "provider": "ollama",
-  "model": "llama3.2",
+  "model": "qwen2.5-coder:7b",
   "fallbackModels": ["llama3.2", "mistral", "qwen2.5-coder"],
   "memory": { "enabled": true },
   "skills": { "enabled": true, "autoCreate": true },
   "obsidian": { "enabled": true, "vaultPath": "" },
-  "agent": { "maxIterations": 100, "planningMode": "auto" }
+  "agent": { "maxIterations": 100, "planningMode": "auto" },
+  "tui": {
+    "theme": "dark",
+    "showToolCalls": true,
+    "showThinking": true,
+    "compactMode": false,
+    "showWorkspaceTree": true
+  }
 }
 ```
+
+---
+
+## Model Aliases
+
+OpenSource comes with three built-in model aliases that map to the best available Ollama models on your system:
+
+| Alias | Target | Best For |
+|-------|--------|----------|
+| `Source flash` | Smallest available (8GB+ RAM) | Fast autocomplete, quick edits |
+| `Source PRO` | Medium 7B-14B (16GB+ RAM) | Balanced coding, planning, multi-file |
+| `Source Ultra` | Largest available (32GB+ RAM) | Complex architecture, deep reasoning |
+
+---
 
 ## Project Structure
 
 ```
-src/
-├── index.ts           # CLI entry point
-├── core/
-│   ├── agent.ts       # Core agent loop (Plan → Execute → Observe → Learn)
-│   └── llm.ts         # Multi-provider LLM (local-first)
-├── tools/
-│   ├── registry.ts    # Tool registry
-│   ├── file.ts        # Filesystem tools (6)
-│   ├── shell.ts       # Shell execution
-│   ├── search.ts      # Code search (2)
-│   ├── web.ts         # Web search & fetch (2)
-│   ├── git.ts         # Git operations (2)
-│   ├── browser.ts     # Browser automation
-│   ├── memory.ts      # Memory tools (2)
-│   ├── skill.ts       # Skill tools (2)
-│   ├── agent.ts       # Sub-agent spawning (2)
-│   └── obsidian.ts    # Obsidian Vault (8)
-├── memory/
-│   └── index.ts       # 4-layer memory system
-├── skills/
-│   └── index.ts       # Self-improving skills
-├── hooks/
-│   └── index.ts       # Pre/post execution hooks
-├── mcp/
-│   └── index.ts       # MCP server integration
-├── gateway/
-│   └── index.ts       # Gateway daemon
-├── sessions/
-│   └── index.ts       # Session management
-├── tui/
-│   └── renderer.ts    # Modern UX engine
-├── config/
-│   └── index.ts       # Hierarchical configuration
-└── types/
-    └── index.ts       # TypeScript definitions
+opensource-cli/
+├── src/
+│   ├── index.ts           # CLI entry point (Commander)
+│   ├── core/
+│   │   ├── agent.ts       # Agent loop: Plan → Execute → Observe → Learn
+│   │   └── llm.ts         # Multi-provider LLM (Ollama-first, XML tool calls)
+│   ├── tools/
+│   │   ├── registry.ts    # Tool registry & discovery
+│   │   ├── file.ts        # Filesystem tools
+│   │   ├── shell.ts       # Shell execution
+│   │   ├── search.ts      # Code search
+│   │   ├── web.ts         # Web search & fetch
+│   │   ├── git.ts         # Git operations
+│   │   ├── browser.ts     # Browser automation (Playwright)
+│   │   ├── memory.ts      # Memory tools
+│   │   ├── skill.ts       # Skill management tools
+│   │   ├── agent.ts       # Sub-agent spawning
+│   │   └── obsidian.ts    # Obsidian Vault integration (8 tools)
+│   ├── config/
+│   │   └── index.ts       # Hierarchical JSON config loader
+│   ├── memory/
+│   │   └── index.ts       # SQLite conversation memory
+│   ├── skills/
+│   │   └── index.ts       # Self-improving skills engine
+│   ├── sessions/
+│   │   └── index.ts       # Session management
+│   ├── hooks/
+│   │   └── index.ts       # Pre/post execution hooks
+│   ├── mcp/
+│   │   └── index.ts       # MCP server integration
+│   ├── gateway/
+│   │   └── index.ts       # Gateway daemon with REST API
+│   ├── tui/
+│   │   └── renderer.ts    # Modern terminal UI engine
+│   ├── utils/
+│   │   └── workspace.ts   # Workspace scanning & tree generation
+│   └── types/
+│       └── index.ts       # TypeScript type definitions
+├── docs/                  # Website (GitHub Pages)
+├── dist/                  # Compiled output
+├── package.json
+├── tsconfig.json
+└── README.md
 ```
+
+---
 
 ## Comparison
 
@@ -224,6 +303,8 @@ src/
 | **Local-First** | ✓ | ✗ | ✗ | ✓ | ✗ |
 | **No API Key** | ✓ | ✗ | ✗ | ✗ | ✗ |
 | **Obsidian Vault** | ✓ | ✗ | ✗ | ✗ | ✗ |
+| **Workspace Scan** | ✓ | ✗ | ✗ | ✗ | ✗ |
+| **Thinking Stream** | ✓ | ✓ | Basic | ✗ | ✗ |
 | **Self-Improving Skills** | ✓ | ✗ | ✓ | ✓ | ✗ |
 | **Multi-Layer Memory** | ✓ | ✓ | ✓ | ✓ | Basic |
 | **Sub-Agent Spawning** | ✓ | ✓ | ✓ | ✗ | ✗ |
@@ -231,9 +312,70 @@ src/
 | **Hooks System** | ✓ | ✓ | ✓ | ✗ | ✗ |
 | **MCP Integration** | ✓ | ✓ | ✗ | ✗ | Limited |
 | **Gateway/Daemon** | ✓ | ✗ | ✓ | ✓ | ✗ |
+| **REST API** | ✓ | ✗ | ✗ | ✗ | ✗ |
 | **Dashboard** | ✓ | ✗ | ✗ | ✗ | ✗ |
 | **Open Source** | ✓ | ✗ | ✓ | ✓ | ✓ |
 
+---
+
+## Gateway REST API
+
+Start the gateway daemon:
+
+```bash
+opensource gateway
+```
+
+Available endpoints:
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/health` | GET | Health check with active sessions |
+| `/api/doctor` | GET | Full diagnostic: Ollama, Git, Obsidian status |
+| `/api/config` | POST | Update config settings at runtime |
+| `/api/models/pull` | POST | Pull a new Ollama model stream |
+| `/api/workspace` | GET | Scan and return workspace file tree |
+
+---
+
+## Development
+
+```bash
+# Clone and install
+git clone https://github.com/samkomedved319-dev/OpenSource.git
+cd opensource-cli
+npm install
+
+# Build
+npm run build
+
+# Development (hot-reload via tsx)
+npm run dev
+
+# Test
+npm test
+
+# Lint & Format
+npm run lint
+npm run format
+```
+
+---
+
+## Website
+
+The OpenSource website lives in `docs/` and is GitHub Pages compatible:
+
+```bash
+# Start local preview from the CLI
+opensource --workdir .. --auto "start preview server on port 4999"
+# Or use the /preview website command in REPL
+```
+
+Visit: [https://samkomedved319-dev.github.io/OpenSource](https://samkomedved319-dev.github.io/OpenSource)
+
+---
+
 ## License
 
-MIT
+MIT © 2026 — Built with ❤️ for the open-source community.

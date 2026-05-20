@@ -3,42 +3,44 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>openSource — Local-First AI Coding Agent</title>
-  <!-- Modern Fonts -->
+  <title>OpenSource — Local-First AI Coding Agent</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
-  <!-- Stylesheet -->
   <link rel="stylesheet" href="opensource.css">
 </head>
 <body>
 
-  <!-- Decorative Animated Background Elements -->
+  <!-- Animated Background -->
   <div class="blob blob-purple"></div>
   <div class="blob blob-yellow"></div>
   <div class="blob blob-green"></div>
   <div class="grid-overlay"></div>
 
-  <!-- Premium Header -->
-  <header>
+  <!-- Scroll To Top -->
+  <button id="scroll-top" class="scroll-top-btn" aria-label="Scroll to top">&#8593;</button>
+
+  <!-- Sticky Header -->
+  <header id="site-header">
     <div class="header-container glass">
       <div class="logo">
-        <span class="logo-icon">◈</span>
+        <span class="logo-icon">&#9674;</span>
         <span class="logo-text">open<span>Source</span></span>
+        <span class="version-badge">v1.1.0</span>
       </div>
-      <nav>
+      <button class="hamburger" id="hamburger" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <nav id="main-nav">
         <a href="#features">Features</a>
-        <a href="#builder">Command Builder</a>
         <a href="#terminal-section">Terminal</a>
         <a href="#models">Models</a>
-        <a href="#estimator">VRAM Estimator</a>
-        <a href="#git-guide">GitHub Sync</a>
-        <a href="#portal" class="nav-btn-link">Launch Portal</a>
+        <a href="#builder">Builder</a>
+        <a href="#portal">Portal</a>
+        <a href="#git-guide">Guide</a>
+        <a href="#changelog">v1.1.0</a>
+        <a href="https://github.com/samkomedved319-dev/OpenSource" class="nav-btn-link" target="_blank">GitHub</a>
       </nav>
-      <div class="system-status">
-        <span class="status-dot"></span>
-        <span class="status-text">Ollama Local Active</span>
-      </div>
     </div>
   </header>
 
@@ -46,77 +48,235 @@
     <!-- Hero Section -->
     <section class="hero">
       <div class="hero-content">
-        <div class="badge glass">◈ LOCAL-FIRST AI CODING AGENT</div>
+        <div class="badge glass">&#9674; LOCAL-FIRST AI CODING AGENT</div>
         <h1>The Ultimate Coding Partner, <br><span class="gradient-text">Right in Your Terminal.</span></h1>
         <p class="hero-desc">
-          An elite, local-first AI software engineering agent. No API keys, no subscriptions, no data leaks. Powered entirely by local LLMs via Ollama, deeply integrated with your Obsidian knowledge vault.
+          An elite, local-first AI software engineering agent. No API keys, no subscriptions, no data leaks.
+          Powered entirely by local LLMs via Ollama, deeply integrated with your Obsidian knowledge vault.
         </p>
         <div class="hero-actions">
-          <a href="#portal" class="btn btn-primary">Connect Environment</a>
-          <a href="#git-guide" class="btn btn-secondary">Read Sync Guide</a>
+          <a href="#install" class="btn btn-primary">Quick Install</a>
+          <a href="#terminal-section" class="btn btn-secondary">See it in Action</a>
+        </div>
+        <div class="hero-code glass">
+          <code><span class="hl-prompt">$</span> <span class="hl-cmd">npm install -g opensource-cli</span></code>
+          <code><span class="hl-prompt">$</span> <span class="hl-cmd">opensource</span> <span class="hl-dim">"Explain this project"</span></code>
         </div>
       </div>
     </section>
 
-    <!-- Detailed Feature Matrix Section -->
+    <!-- Quick Install Section -->
+    <section id="install" class="install-section">
+      <div class="section-header">
+        <h2>Install in <span class="gradient-text">One Command</span></h2>
+        <p>Get started with OpenSource on any platform. Works with any local Ollama model.</p>
+      </div>
+      <div class="install-tabs">
+        <button class="install-tab active" data-platform="npm">npm global</button>
+        <button class="install-tab" data-platform="dev">Development</button>
+        <button class="install-tab" data-platform="docker">Docker (coming soon)</button>
+      </div>
+      <div class="install-code glass">
+        <div class="install-content active" id="install-npm">
+          <pre><code><span class="hl-dim"># Install globally</span>
+npm install -g opensource-cli
+
+<span class="hl-dim"># Ensure Ollama is running</span>
+ollama serve
+
+<span class="hl-dim"># Start coding</span>
+opensource</code></pre>
+        </div>
+        <div class="install-content" id="install-dev">
+          <pre><code><span class="hl-dim"># Clone and build from source</span>
+git clone https://github.com/samkomedved319-dev/OpenSource.git
+cd OpenSource/opensource-cli
+npm install
+npm run build
+
+<span class="hl-dim"># Link globally</span>
+npm link
+
+<span class="hl-dim"># Development mode (hot-reload)</span>
+npm run dev</code></pre>
+        </div>
+        <div class="install-content" id="install-docker">
+          <pre><code><span class="hl-dim"># Docker support coming in v1.2.0</span>
+<span class="hl-dim"># Stay tuned!</span></code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
     <section id="features" class="features-section">
       <div class="section-header">
         <h2>Core <span class="gradient-text">Agent Capabilities</span></h2>
         <p>Explore the comprehensive suite of engineering functions running completely locally on your hardware.</p>
       </div>
-
       <div class="features-grid">
-        <!-- Feature 1: Code Gen -->
         <div class="feature-card glass">
-          <div class="feat-icon-wrap">⚙</div>
+          <div class="feat-icon-wrap">&#9881;</div>
           <h3>AI Code Generation</h3>
-          <p>Generate complete REST APIs, database schemas, full frontend web layouts, game logic scripts, and cloud deployment scripts from natural language prompts.</p>
+          <p>Generate complete REST APIs, database schemas, frontend layouts, and deployment scripts from natural language prompts.</p>
         </div>
-
-        <!-- Feature 2: Autocomplete -->
         <div class="feature-card glass">
-          <div class="feat-icon-wrap">✦</div>
-          <h3>Predictive Autocomplete</h3>
-          <p>Super-charge your daily workflow with sub-second inline suggestions, whole-function predictive completions, auto-import cataloging, and intelligent boilerplate generation.</p>
+          <div class="feat-icon-wrap">&#10022;</div>
+          <h3>Workspace Intelligence</h3>
+          <p>Visual directory tree scanning on startup. The agent understands your project structure before you type a single command.</p>
         </div>
-
-        <!-- Feature 3: Self-Healing Diagnostics -->
         <div class="feature-card glass">
-          <div class="feat-icon-wrap">⚡</div>
+          <div class="feat-icon-wrap">&#9889;</div>
           <h3>Self-Healing Diagnostics</h3>
-          <p>The agent automatically compiles code, runs test suites, catches lint errors, and plans and executes search/replace refactoring blocks to heal broken builds autonomously.</p>
+          <p>Automatically compiles code, runs tests, catches lint errors, and executes search/replace refactoring to fix broken builds.</p>
         </div>
-
-        <!-- Feature 4: Safe Sandbox Guardrails -->
         <div class="feature-card glass">
-          <div class="feat-icon-wrap">🛡</div>
+          <div class="feat-icon-wrap">&#128737;</div>
           <h3>Sandbox Command Guards</h3>
-          <p>Rest assured while running scripts. All shell commands undergo real-time heuristic security audits, checking arguments against strict sandboxed guardrails.</p>
+          <p>All shell commands undergo real-time heuristic security audits against strict sandboxed guardrails before execution.</p>
         </div>
-
-        <!-- Feature 5: In-Memory Obsidian Sync -->
         <div class="feature-card glass">
-          <div class="feat-icon-wrap">⚿</div>
-          <h3>Obsidian Knowledge Link</h3>
-          <p>Deeply ingest your private markdown notes, thoughts, and technical wikis. Incorporate custom tags, project guidelines, and memories directly into context.</p>
+          <div class="feat-icon-wrap">&#9915;</div>
+          <h3>Thinking Stream</h3>
+          <p>Watch the model's reasoning in real-time. Supports both <code>&lt;think&gt;</code> tags and native <code>reasoning_content</code> streaming.</p>
         </div>
-
-        <!-- Feature 6: MCP Server Orchestrator -->
         <div class="feature-card glass">
-          <div class="feat-icon-wrap">◈</div>
+          <div class="feat-icon-wrap">&#9674;</div>
           <h3>MCP SDK Client</h3>
-          <p>Native Model Context Protocol (MCP) integration. Ingest third-party tools, remote resources, database engines, and execute multi-agent communication streams seamlessly.</p>
+          <p>Native Model Context Protocol integration. Connect third-party tools, remote resources, and database engines seamlessly.</p>
         </div>
       </div>
     </section>
 
-    <!-- Interactive CLI Command Builder Section -->
+    <!-- Interactive Terminal -->
+    <section id="terminal-section" class="terminal-showcase">
+      <div class="section-header">
+        <h2>See OpenSource <span class="gradient-text">in Action</span></h2>
+        <p>Select a scenario below to watch the agent ingest directories, execute plans, and optimize code in real-time.</p>
+      </div>
+      <div class="playground-controls">
+        <button class="play-tab active" data-scenario="api">&#9674; Generate API</button>
+        <button class="play-tab" data-scenario="refactor">&#9674; Autopilot Refactor</button>
+        <button class="play-tab" data-scenario="doctor">&#9674; Security Doctor</button>
+        <button class="play-tab" data-scenario="commit">&#9674; Commit Diffs</button>
+      </div>
+      <div class="terminal-container glass">
+        <div class="terminal-header">
+          <div class="terminal-dots">
+            <span class="dot-red"></span>
+            <span class="dot-yellow"></span>
+            <span class="dot-green"></span>
+          </div>
+          <div class="terminal-title">opensource cli — interactive session</div>
+        </div>
+        <div class="terminal-body" id="typewriter-terminal"></div>
+      </div>
+    </section>
+
+    <!-- Tool Calling Architecture -->
+    <section id="tool-calling" class="toolcalling-section">
+      <div class="section-header">
+        <h2>Prompt-Based <span class="gradient-text">Tool Calling Engine</span></h2>
+        <p>OpenSource uses a text-based XML tool calling system that works with any local model — no native API tools needed.</p>
+      </div>
+      <div class="toolcalling-grid">
+        <div class="toolcalling-diagram glass">
+          <h4>How it Works</h4>
+          <div class="diagram-flow">
+            <div class="flow-step">
+              <span class="step-num">1</span>
+              <div class="step-content">
+                <strong>Tool Definitions</strong>
+                <p>Model receives tool descriptions as formatted text in the system prompt</p>
+              </div>
+            </div>
+            <div class="flow-arrow">&#8595;</div>
+            <div class="flow-step">
+              <span class="step-num">2</span>
+              <div class="step-content">
+                <strong>Model Responds</strong>
+                <p>Model outputs <code>&lt;tool_call&gt;{JSON}&lt;/tool_call&gt;</code> in its text response</p>
+              </div>
+            </div>
+            <div class="flow-arrow">&#8595;</div>
+            <div class="flow-step">
+              <span class="step-num">3</span>
+              <div class="step-content">
+                <strong>XML Parsed</strong>
+                <p>Agent extracts the JSON, validates schema, and executes the tool</p>
+              </div>
+            </div>
+            <div class="flow-arrow">&#8595;</div>
+            <div class="flow-step">
+              <span class="step-num">4</span>
+              <div class="step-content">
+                <strong>Result Injected</strong>
+                <p>Tool result is injected as a user message — model continues naturally</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="toolcalling-benefits glass">
+          <h4>Why This Matters</h4>
+          <ul class="benefits-list">
+            <li><span class="benefit-icon">&#10003;</span> <strong>No Hangs</strong> — Small models don't freeze on native tools API</li>
+            <li><span class="benefit-icon">&#10003;</span> <strong>No Schema Leaking</strong> — JSON schema stays in the prompt, not the output</li>
+            <li><span class="benefit-icon">&#10003;</span> <strong>100% Compatible</strong> — Works with any Ollama model, even 3B parameters</li>
+            <li><span class="benefit-icon">&#10003;</span> <strong>Deterministic</strong> — XML tags are easy for models to learn and follow</li>
+            <li><span class="benefit-icon">&#10003;</span> <strong>Transparent</strong> — You can see exactly what the model is calling</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Model Suites -->
+    <section id="models" class="models-showcase">
+      <div class="section-header">
+        <h2>Local <span class="gradient-text">Model Architecture</span></h2>
+        <p>Three elite model configurations built to run on your local Ollama instance with specialized coding weights.</p>
+      </div>
+      <div class="models-grid">
+        <div class="model-suite-card glass flash">
+          <span class="suite-badge flash">Source flash</span>
+          <h4>Lightweight Autocomplete</h4>
+          <span class="suite-param">5B &#183; 32K Context &#183; Q4_K_M &#183; Temp: 0.0</span>
+          <p>Optimized for ultra-low latency inline auto-completions and quick terminal commands. Runs flawlessly on 8GB+ RAM.</p>
+          <div class="suite-specs">
+            <div class="spec-item">Sub-second code completion latency</div>
+            <div class="spec-item">Deterministic Fill-In-the-Middle (FIM)</div>
+            <div class="spec-item">Extremely light memory footprint</div>
+          </div>
+        </div>
+        <div class="model-suite-card glass pro">
+          <span class="suite-badge pro">Source PRO</span>
+          <h4>Balanced Flagship</h4>
+          <span class="suite-param">14B &#183; 64K Context &#183; Q8_0 &#183; Temp: 0.3</span>
+          <p>Our standard engine. Ideal for autonomous planning, multi-file code editing, and deep Obsidian index search. Perfect for 16GB+ RAM.</p>
+          <div class="suite-specs">
+            <div class="spec-item">Flagship multi-file reasoning engine</div>
+            <div class="spec-item">High-fidelity search/replace block synthesis</div>
+            <div class="spec-item">Deep tool calling & plan execution accuracy</div>
+          </div>
+        </div>
+        <div class="model-suite-card glass ultra">
+          <span class="suite-badge ultra">Source Ultra</span>
+          <h4>Heavyweight Synthesizer</h4>
+          <span class="suite-param">32B &#183; 128K Context &#183; FP16 &#183; Temp: 0.5</span>
+          <p>The ultimate software engineer. Tailored for complex multi-turn logic, application architecture synthesis, and deep algorithmic optimization. Best on 32GB+ RAM.</p>
+          <div class="suite-specs">
+            <div class="spec-item">Heavy-duty application scaffolding</div>
+            <div class="spec-item">Deep algorithmic logic optimization</div>
+            <div class="spec-item">Maximum context comprehension accuracy</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Command Builder -->
     <section id="builder" class="builder-section">
       <div class="section-header">
         <h2>Interactive <span class="gradient-text">Command Builder</span></h2>
-        <p>Visually configure your openSource agent variables and dynamically generate the exact shell command to run.</p>
+        <p>Visually configure your OpenSource agent variables and dynamically generate the exact shell command to run.</p>
       </div>
-
       <div class="builder-container glass">
         <div class="builder-grid">
           <div class="builder-inputs">
@@ -128,7 +288,6 @@
                 <option value="git-committer">git-committer (AI Semantic Commits)</option>
               </select>
             </div>
-            
             <div class="form-group">
               <label for="builder-model">Local LLM Engine</label>
               <select id="builder-model">
@@ -137,7 +296,6 @@
                 <option value="Source Ultra">Source Ultra (32B Heavy Synthesizer)</option>
               </select>
             </div>
-
             <div class="form-group">
               <label>Configuration Options</label>
               <div class="checkbox-group">
@@ -150,13 +308,12 @@
                   <label for="flag-auto">Auto-approve tool commands (<code>--auto</code>)</label>
                 </div>
                 <div class="checkbox-item">
-                  <input type="checkbox" id="flag-verbose">
-                  <label for="flag-verbose">Show verbose diagnostics (<code>--verbose</code>)</label>
+                  <input type="checkbox" id="flag-no-scan">
+                  <label for="flag-no-scan">Skip workspace scan (<code>--no-scan</code>)</label>
                 </div>
               </div>
             </div>
           </div>
-
           <div class="builder-prompt">
             <div class="form-group" style="height: 100%; display: flex; flex-direction: column;">
               <label for="builder-input-prompt">Describe the Task or Prompt</label>
@@ -164,7 +321,6 @@
             </div>
           </div>
         </div>
-
         <div class="builder-output">
           <div class="output-header">
             <span>GENERATED CLI COMMAND</span>
@@ -177,100 +333,17 @@
       </div>
     </section>
 
-    <!-- Interactive Terminal & Live Demo -->
-    <section id="terminal-section" class="terminal-showcase">
-      <div class="section-header">
-        <h2>See openSource <span class="gradient-text">in Action</span></h2>
-        <p>Select a scenario below to watch the agent ingest directories, execute plans, and optimize code edits in real-time.</p>
-      </div>
-
-      <!-- Playground Controls -->
-      <div class="playground-controls">
-        <button class="play-tab active" data-scenario="api">◈ Generate API</button>
-        <button class="play-tab" data-scenario="refactor">◈ Autopilot Refactor</button>
-        <button class="play-tab" data-scenario="doctor">◈ Security Doctor</button>
-        <button class="play-tab" data-scenario="commit">◈ Commit Diffs</button>
-      </div>
-
-      <div class="terminal-container glass">
-        <div class="terminal-header">
-          <div class="terminal-dots">
-            <span class="dot-red"></span>
-            <span class="dot-yellow"></span>
-            <span class="dot-green"></span>
-          </div>
-          <div class="terminal-title">powershell — opensource cli</div>
-        </div>
-        <div class="terminal-body" id="typewriter-terminal">
-          <!-- Typewriter contents injected by opensource.js -->
-        </div>
-      </div>
-    </section>
-
-    <!-- Local Model Suites Section -->
-    <section id="models" class="models-showcase">
-      <div class="section-header">
-        <h2>Local <span class="gradient-text">Model Architecture</span></h2>
-        <p>Three elite model configurations built to run on your local Ollama instance with specialized coding weights.</p>
-      </div>
-
-      <div class="models-grid">
-        <!-- Model 1: Source flash -->
-        <div class="model-suite-card glass flash">
-          <span class="suite-badge flash">Source flash</span>
-          <h4>Lightweight Autocomplete</h4>
-          <span class="suite-param">5B · 32K Context · Q4_K_M · Temp: 0.0</span>
-          <p>Optimized for ultra-low latency inline auto-completions, rapid syntax edits, and quick terminal commands. Runs flawlessly on systems with limited RAM (8GB+).</p>
-          <div class="suite-specs">
-            <div class="spec-item">Sub-second code completion latency</div>
-            <div class="spec-item">Deterministic Fill-In-the-Middle (FIM) autocomplete</div>
-            <div class="spec-item">Extremely light memory footprint</div>
-          </div>
-        </div>
-
-        <!-- Model 2: Source PRO -->
-        <div class="model-suite-card glass pro">
-          <span class="suite-badge pro">Source PRO</span>
-          <h4>Balanced Flagship</h4>
-          <span class="suite-param">14B · 64K Context · Q8_0 · Temp: 0.3</span>
-          <p>Our standard engine. Ideal for autonomous planning, multi-file code editing, self-healing diagnostic runs, and deep Obsidian index search. Perfect for 16GB+ RAM.</p>
-          <div class="suite-specs">
-            <div class="spec-item">Flagship multi-file reasoning engine</div>
-            <div class="spec-item">High-fidelity search/replace block synthesis</div>
-            <div class="spec-item">Deep tool calling & plan execution accuracy</div>
-          </div>
-        </div>
-
-        <!-- Model 3: Source Ultra -->
-        <div class="model-suite-card glass ultra">
-          <span class="suite-badge ultra">Source Ultra</span>
-          <h4>Heavyweight Synthesizer</h4>
-          <span class="suite-param">32B · 128K Context · FP16 · Temp: 0.5</span>
-          <p>The ultimate software engineer. Tailored for complex multi-turn logic, comprehensive application architecture synthesis, deep math routines, and complex algorithms. Best on 32GB+ RAM.</p>
-          <div class="suite-specs">
-            <div class="spec-item">Heavy-duty application scaffolding</div>
-            <div class="spec-item">Deep algorithmic logic optimization</div>
-            <div class="spec-item">Maximum context comprehension accuracy</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- High-End Interactive Login / Connection Portal -->
+    <!-- Connection Portal -->
     <section id="portal" class="portal-section">
       <div class="section-header">
         <h2>Interactive <span class="gradient-text">Connection Portal</span></h2>
-        <p>Connect your local openSource agent, monitor model weights, and explore vault integration metrics.</p>
+        <p>Connect your local OpenSource agent, monitor model weights, and explore vault integration metrics.</p>
       </div>
-
       <div class="portal-wrapper">
         <div class="portal-card glass" id="portal-container">
-          
-          <!-- State A: Login Portal -->
           <div class="portal-state" id="state-login">
             <h3>Authenticate Connection</h3>
             <p class="subtitle">Securely bridge your terminal agent context to the visual dashboard.</p>
-            
             <form id="login-form">
               <div class="form-group">
                 <label for="username">Username or Agent Alias</label>
@@ -278,30 +351,26 @@
               </div>
               <div class="form-group">
                 <label for="token">Local Access Token / Passphrase</label>
-                <input type="password" id="token" placeholder="••••••••••••••••" required autocomplete="off">
+                <input type="password" id="token" placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;" required autocomplete="off">
                 <span class="helper-text">Defaults to local machine password or custom vault passcode.</span>
               </div>
               <div class="form-group-checkbox">
                 <input type="checkbox" id="persist" checked>
                 <label for="persist">Remember terminal handshake</label>
               </div>
-              
               <button type="submit" class="btn btn-primary btn-block" id="login-submit-btn">
                 <span class="btn-text">Establish Secure Bridge</span>
                 <span class="spinner-inline hidden"></span>
               </button>
             </form>
-            
             <div class="connection-hint">
               <p>Handshake relies on local port <code>3100</code>. Start gateway daemon with <code>opensource gateway</code>.</p>
             </div>
           </div>
-
-          <!-- State B: Gorgeous Visual Dashboard (Hidden by default, morphs in on login) -->
           <div class="portal-state hidden" id="state-dashboard">
             <div class="dashboard-header">
               <div class="dashboard-profile">
-                <div class="avatar">◈</div>
+                <div class="avatar">&#9674;</div>
                 <div class="profile-info">
                   <h4 id="user-display">samko</h4>
                   <p class="status-badge">Handshake Active</p>
@@ -309,12 +378,9 @@
               </div>
               <button class="btn-disconnect" id="disconnect-btn">Disconnect Bridge</button>
             </div>
-
             <div class="dashboard-grid">
-              
-              <!-- Card 1: Active LLM Engine -->
               <div class="dash-card glass">
-                <span class="dash-icon">⚙</span>
+                <span class="dash-icon">&#9881;</span>
                 <h5>AI Model Layer</h5>
                 <div class="model-selection">
                   <div class="model-item active">
@@ -334,10 +400,8 @@
                   </div>
                 </div>
               </div>
-
-              <!-- Card 2: Obsidian Vault Link -->
               <div class="dash-card glass">
-                <span class="dash-icon">✦</span>
+                <span class="dash-icon">&#10022;</span>
                 <h5>Obsidian Vault Sync</h5>
                 <div class="sync-metrics">
                   <div class="metric">
@@ -349,31 +413,22 @@
                     <span class="metric-label">Tags Cataloged</span>
                   </div>
                 </div>
-                <div class="vault-path-info">
-                  <code>~/Documents/ObsidianVault</code>
-                </div>
+                <div class="vault-path-info"><code>~/Documents/ObsidianVault</code></div>
                 <div class="sync-progressbar">
                   <div class="sync-fill" id="sync-progress" style="width: 0%;"></div>
                 </div>
-                <span class="sync-status-msg" id="sync-msg">✔ Syncing notes index...</span>
+                <span class="sync-status-msg" id="sync-msg">&#10003; Syncing notes index...</span>
               </div>
-
-              <!-- Card 3: Memory Layers -->
               <div class="dash-card glass">
-                <span class="dash-icon">⚿</span>
-                <h5>Active Context Memory</h5>
-                <div class="memory-layers">
-                  <span class="layer-pill">opensource-md</span>
-                  <span class="layer-pill">memory-md</span>
-                  <span class="layer-pill">obsidian-vault</span>
-                  <span class="layer-pill">conversation</span>
+                <span class="dash-icon">&#9915;</span>
+                <h5>Thinking Stream</h5>
+                <div class="thinking-preview" id="thinking-preview">
+                  <div class="thinking-line">&#9474; analyzing workspace structure...</div>
+                  <div class="thinking-line">&#9474; scanning src/ directory for entry points</div>
                 </div>
-                <p class="memory-usage">Storage: <strong>12.4 KB</strong> / 1000 entries</p>
               </div>
-
-              <!-- Card 4: Codebase Scanner Status -->
               <div class="dash-card glass">
-                <span class="dash-icon">⚡</span>
+                <span class="dash-icon">&#9889;</span>
                 <h5>Project Scan Structure</h5>
                 <p class="scan-primary-label">Detected Primary Folder:</p>
                 <div class="primary-dir-badge"><code>./src</code> (Primary)</div>
@@ -384,302 +439,231 @@
                   <div class="lang-bar"><span class="lang-name">MD</span><span class="bar-outer"><span class="bar-inner" style="width: 10%;"></span></span><span class="lang-pct">10%</span></div>
                 </div>
               </div>
-
-              <!-- Card 5: Live Event Stream Panel (Span 2) -->
               <div class="dash-card glass event-stream-card" style="grid-column: span 2;">
-                <span class="dash-icon">◈</span>
+                <span class="dash-icon">&#9674;</span>
                 <h5>Live Agent Event Stream</h5>
                 <div class="event-stream-container" id="event-stream">
                   <div class="event-line system">[system] gateway connection established</div>
                 </div>
               </div>
-
             </div>
           </div>
-
         </div>
       </div>
     </section>
 
-    <!-- GPU VRAM & Training Estimator Section -->
-    <section id="estimator" class="estimator-section">
+    <!-- Changelog / v1.1.0 Section -->
+    <section id="changelog" class="changelog-section">
       <div class="section-header">
-        <h2>GPU VRAM & <span class="gradient-text">Training Estimator</span></h2>
-        <p>Estimate physical VRAM constraints, hardware requirements, and training speeds for custom coding models.</p>
+        <h2>What's New in <span class="gradient-text">v1.1.0</span></h2>
+        <p>The latest release brings major stability improvements and new capabilities.</p>
       </div>
-
-      <div class="estimator-container glass">
-        <div class="estimator-grid">
-          
-          <!-- Inputs Column -->
-          <div class="estimator-inputs">
-            <h3>Configure Training Profile</h3>
-            
-            <div class="form-group">
-              <label for="est-model-size">Model Parameter Size</label>
-              <select id="est-model-size">
-                <option value="5" selected>Source flash (5B Parameters)</option>
-                <option value="7">Qwen2.5-Coder / Llama-3 (7B/8B)</option>
-                <option value="14">Source PRO (14B Parameters)</option>
-                <option value="32">Source Ultra (32B Parameters)</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label for="est-method">Fine-Tuning Type</label>
-              <select id="est-method">
-                <option value="lora4" selected>LoRA 4-bit Quantized (Highly Optimized)</option>
-                <option value="lora8">LoRA 8-bit Quantized (High Fidelity)</option>
-                <option value="full16">Full Fine-Tune 16-bit (Enterprise Resource)</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <div class="slider-label-row">
-                <label for="est-dataset-size">Dataset Size (Examples)</label>
-                <span class="slider-value-display" id="dataset-size-val">5,000</span>
-              </div>
-              <input type="range" id="est-dataset-size" min="500" max="50000" step="500" value="5000" class="estimator-slider">
-              <span class="helper-text">Number of clean code sequences or task prompt pairs.</span>
-            </div>
-          </div>
-
-          <!-- Outputs Column -->
-          <div class="estimator-outputs">
-            <h3>Resource Calculations</h3>
-            
-            <div class="est-cards-grid">
-              <!-- VRAM Card -->
-              <div class="est-card glass">
-                <div class="est-card-header">
-                  <span class="est-card-icon">⚡</span>
-                  <h4>VRAM Required</h4>
-                </div>
-                <div class="est-card-value" id="est-vram-val">6.0 GB</div>
-                <div class="est-card-badge badge-green" id="est-vram-badge">Consumer GPU Safe</div>
-              </div>
-
-              <!-- Hardware Card -->
-              <div class="est-card glass">
-                <div class="est-card-header">
-                  <span class="est-card-icon">⚙</span>
-                  <h4>Recommended GPU</h4>
-                </div>
-                <div class="est-card-value-small" id="est-gpu-val">RTX 3060 / 4060 Ti (16GB)</div>
-                <p class="est-card-desc" id="est-gpu-desc">Standard consumer gaming setup is fully sufficient.</p>
-              </div>
-
-              <!-- Speed/Time Card -->
-              <div class="est-card glass">
-                <div class="est-card-header">
-                  <span class="est-card-icon">✦</span>
-                  <h4>Est. Training Time</h4>
-                </div>
-                <div class="est-card-value" id="est-time-val">~12 min</div>
-                <p class="est-card-desc" id="est-time-desc">Calculated on a standard single RTX 4090 GPU node.</p>
-              </div>
-
-              <!-- Feasibility Card -->
-              <div class="est-card glass">
-                <div class="est-card-header">
-                  <span class="est-card-icon">🛡</span>
-                  <h4>Feasibility Class</h4>
-                </div>
-                <div class="est-card-value" id="est-feasibility-val">Low Cost</div>
-                <div class="est-card-badge badge-green" id="est-feasibility-badge">Highly Feasible</div>
-              </div>
-            </div>
-          </div>
-          
+      <div class="changelog-grid">
+        <div class="changelog-card glass">
+          <div class="cl-badge cl-feat">Feature</div>
+          <h4>Workspace Scan Toggle</h4>
+          <p>Configurable via <code>tui.showWorkspaceTree</code> in <code>.opensource/opensource.json</code> or the <code>--no-scan</code> CLI flag.</p>
+        </div>
+        <div class="changelog-card glass">
+          <div class="cl-badge cl-fix">Fix</div>
+          <h4>Ollama Tool Calling Stability</h4>
+          <p>Prompt-based XML <code>&lt;tool_call&gt;</code> engine replaces native API tools parameter. Eliminates hangs and JSON schema leaking on small local models.</p>
+        </div>
+        <div class="changelog-card glass">
+          <div class="cl-badge cl-feat">Feature</div>
+          <h4>Thinking Stream</h4>
+          <p>Real-time model reasoning visible in the terminal. Supports both <code>&lt;think&gt;</code> tags and native <code>reasoning_content</code> from Ollama/DeepSeek.</p>
+        </div>
+        <div class="changelog-card glass">
+          <div class="cl-badge cl-feat">Feature</div>
+          <h4>/preview Command</h4>
+          <p>Preview suite for plans, commits, files, status, tools, and even a local website preview server.</p>
+        </div>
+        <div class="changelog-card glass">
+          <div class="cl-badge cl-api">API</div>
+          <h4>Gateway REST Endpoints</h4>
+          <p>New endpoints: <code>/api/doctor</code>, <code>/api/config</code> (POST), <code>/api/models/pull</code>, <code>/api/workspace</code>.</p>
+        </div>
+        <div class="changelog-card glass">
+          <div class="cl-badge cl-ux">UX</div>
+          <h4>Unicode Fallback & Polish</h4>
+          <p>Terminal symbols gracefully degrade on non-Unicode terminals. Improved error messages with actionable guidance.</p>
         </div>
       </div>
     </section>
 
-    <!-- Comprehensive GitHub Sync & Run Guide -->
+    <!-- Feature Comparison Table -->
+    <section id="comparison" class="comparison-section">
+      <div class="section-header">
+        <h2>OpenSource vs <span class="gradient-text">The Alternatives</span></h2>
+        <p>How OpenSource compares to other AI coding agents.</p>
+      </div>
+      <div class="comparison-table-wrapper">
+        <table class="comparison-table glass">
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th class="highlight-col">OpenSource</th>
+              <th>Claude Code</th>
+              <th>OpenClaw</th>
+              <th>Hermes</th>
+              <th>OpenCode</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Local-First</td><td class="highlight-col"><span class="check-yes">&#10003;</span></td><td><span class="check-no">&#10007;</span></td><td><span class="check-no">&#10007;</span></td><td><span class="check-yes">&#10003;</span></td><td><span class="check-no">&#10007;</span></td></tr>
+            <tr><td>No API Key Required</td><td class="highlight-col"><span class="check-yes">&#10003;</span></td><td><span class="check-no">&#10007;</span></td><td><span class="check-no">&#10007;</span></td><td><span class="check-no">&#10007;</span></td><td><span class="check-no">&#10007;</span></td></tr>
+            <tr><td>Obsidian Vault Integration</td><td class="highlight-col"><span class="check-yes">&#10003;</span></td><td><span class="check-no">&#10007;</span></td><td><span class="check-no">&#10007;</span></td><td><span class="check-no">&#10007;</span></td><td><span class="check-no">&#10007;</span></td></tr>
+            <tr><td>Workspace Scan</td><td class="highlight-col"><span class="check-yes">&#10003;</span></td><td><span class="check-no">&#10007;</span></td><td><span class="check-no">&#10007;</span></td><td><span class="check-no">&#10007;</span></td><td><span class="check-no">&#10007;</span></td></tr>
+            <tr><td>Thinking Stream</td><td class="highlight-col"><span class="check-yes">&#10003;</span></td><td><span class="check-yes">&#10003;</span></td><td>Basic</td><td><span class="check-no">&#10007;</span></td><td><span class="check-no">&#10007;</span></td></tr>
+            <tr><td>Self-Improving Skills</td><td class="highlight-col"><span class="check-yes">&#10003;</span></td><td><span class="check-no">&#10007;</span></td><td><span class="check-yes">&#10003;</span></td><td><span class="check-yes">&#10003;</span></td><td><span class="check-no">&#10007;</span></td></tr>
+            <tr><td>Multi-Layer Memory</td><td class="highlight-col"><span class="check-yes">&#10003;</span></td><td><span class="check-yes">&#10003;</span></td><td><span class="check-yes">&#10003;</span></td><td><span class="check-yes">&#10003;</span></td><td>Basic</td></tr>
+            <tr><td>Sub-Agent Spawning</td><td class="highlight-col"><span class="check-yes">&#10003;</span></td><td><span class="check-yes">&#10003;</span></td><td><span class="check-yes">&#10003;</span></td><td><span class="check-no">&#10007;</span></td><td><span class="check-no">&#10007;</span></td></tr>
+            <tr><td>Parallel Agents</td><td class="highlight-col"><span class="check-yes">&#10003;</span></td><td><span class="check-no">&#10007;</span></td><td><span class="check-no">&#10007;</span></td><td><span class="check-no">&#10007;</span></td><td><span class="check-no">&#10007;</span></td></tr>
+            <tr><td>Hooks System</td><td class="highlight-col"><span class="check-yes">&#10003;</span></td><td><span class="check-yes">&#10003;</span></td><td><span class="check-yes">&#10003;</span></td><td><span class="check-no">&#10007;</span></td><td><span class="check-no">&#10007;</span></td></tr>
+            <tr><td>MCP Integration</td><td class="highlight-col"><span class="check-yes">&#10003;</span></td><td><span class="check-yes">&#10003;</span></td><td><span class="check-no">&#10007;</span></td><td><span class="check-no">&#10007;</span></td><td>Limited</td></tr>
+            <tr><td>Gateway / Daemon Mode</td><td class="highlight-col"><span class="check-yes">&#10003;</span></td><td><span class="check-no">&#10007;</span></td><td><span class="check-yes">&#10003;</span></td><td><span class="check-yes">&#10003;</span></td><td><span class="check-no">&#10007;</span></td></tr>
+            <tr><td>REST API</td><td class="highlight-col"><span class="check-yes">&#10003;</span></td><td><span class="check-no">&#10007;</span></td><td><span class="check-no">&#10007;</span></td><td><span class="check-no">&#10007;</span></td><td><span class="check-no">&#10007;</span></td></tr>
+            <tr><td>Dashboard</td><td class="highlight-col"><span class="check-yes">&#10003;</span></td><td><span class="check-no">&#10007;</span></td><td><span class="check-no">&#10007;</span></td><td><span class="check-no">&#10007;</span></td><td><span class="check-no">&#10007;</span></td></tr>
+            <tr><td>Open Source</td><td class="highlight-col"><span class="check-yes">&#10003;</span></td><td><span class="check-no">&#10007;</span></td><td><span class="check-yes">&#10003;</span></td><td><span class="check-yes">&#10003;</span></td><td><span class="check-yes">&#10003;</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- GitHub Sync & Run Guide -->
     <section id="git-guide" class="guide-section">
       <div class="section-header">
         <h2>How to Run, Sync, & <span class="gradient-text">Train Locally</span></h2>
         <p>Follow our comprehensive step-by-step guides to deploy the CLI, back up vaults, and fine-tune custom local models.</p>
       </div>
-
       <div class="guides-container">
-        
-        <!-- Accordion 1: Running the openSource CLI -->
         <div class="accordion-item glass">
           <div class="accordion-trigger">
             <span class="accordion-num">01</span>
-            <h4>How to Run openSource CLI Locally</h4>
-            <span class="accordion-arrow">▼</span>
+            <h4>How to Run OpenSource CLI Locally</h4>
+            <span class="accordion-arrow">&#9660;</span>
           </div>
           <div class="accordion-content">
-            <p>Make sure you have Node.js (v18+) and Ollama installed. Run the following commands:</p>
-            <pre><code># 1. Start your local Ollama server
+            <p>Make sure you have Node.js (v20+) and Ollama installed. Run the following commands:</p>
+            <pre><code><span class="hl-dim"># 1. Start your local Ollama server</span>
 ollama serve
 
-# 2. Pull the default Source models (or map to Qwen2.5-Coder)
+<span class="hl-dim"># 2. Pull a coding model</span>
 ollama pull qwen2.5-coder:7b
 
-# 3. Launch openSource globally
+<span class="hl-dim"># 3. Launch OpenSource globally</span>
 npm install -g opensource-cli
 opensource
 
-# Alternatively, run REPL in a specific project workdir
+<span class="hl-dim"># Or run REPL in a specific project directory</span>
 opensource --workdir ./my-project</code></pre>
-            <p>Once loaded, type <code>/help</code> in the flat terminal UI to see the list of active slash commands.</p>
+            <p>Once loaded, type <code>/help</code> to see the list of active slash commands.</p>
           </div>
         </div>
-
-        <!-- Accordion 2: Uploading openSource CLI to GitHub -->
         <div class="accordion-item glass">
           <div class="accordion-trigger">
             <span class="accordion-num">02</span>
-            <h4>How to Upload Your CLI Agent Workspace to GitHub</h4>
-            <span class="accordion-arrow">▼</span>
+            <h4>How to Upload Your CLI Workspace to GitHub</h4>
+            <span class="accordion-arrow">&#9660;</span>
           </div>
           <div class="accordion-content">
             <p>Pushing your project directory to GitHub is simple and allows your local agent to track history:</p>
-            <pre><code># 1. Initialize Git in your project root
+            <pre><code><span class="hl-dim"># 1. Initialize Git in your project root</span>
 git init
 
-# 2. Create a standard .gitignore file to exclude heavy files
+<span class="hl-dim"># 2. Create .gitignore</span>
 echo "node_modules/\ndist/\n.env\n.DS_Store" > .gitignore
 
-# 3. Stage and commit your files
+<span class="hl-dim"># 3. Stage and commit</span>
 git add .
-git commit -m "feat: initialize project with openSource CLI"
+git commit -m "feat: initialize project with OpenSource CLI"
 
-# 4. Create your remote repository on GitHub, then link and push
-git remote add origin https://github.com/your-username/your-repo-name.git
+<span class="hl-dim"># 4. Link remote and push</span>
+git remote add origin https://github.com/your-username/your-repo.git
 git branch -M main
 git push -u origin main</code></pre>
-            <p>Your openSource CLI can now automatically execute AI commit diffs using the <code>/commit</code> command!</p>
+            <p>Your OpenSource CLI can now automatically execute AI commit diffs using the <code>/commit</code> command!</p>
           </div>
         </div>
-
-        <!-- Accordion 3: Connecting & Synching Obsidian Vault to GitHub -->
         <div class="accordion-item glass">
           <div class="accordion-trigger">
             <span class="accordion-num">03</span>
-            <h4>How to Upload and Sync Obsidian Vault to GitHub</h4>
-            <span class="accordion-arrow">▼</span>
+            <h4>How to Sync Obsidian Vault to GitHub</h4>
+            <span class="accordion-arrow">&#9660;</span>
           </div>
           <div class="accordion-content">
-            <p>Keep your Obsidian Knowledge Vault securely synced to GitHub. You have two highly efficient methods:</p>
-            
+            <p>Keep your Obsidian Knowledge Vault securely synced to GitHub:</p>
             <div class="tab-container">
               <h5>Method A: Using the Obsidian Git Plugin (Recommended)</h5>
               <ol>
-                <li>Open Obsidian, navigate to <strong>Settings</strong> > <strong>Community Plugins</strong>, search for <strong>Obsidian Git</strong>, and click install.</li>
-                <li>Ensure Git is installed on your local computer. Initialize a Git repository inside your vault folder:
+                <li>Open Obsidian, navigate to <strong>Settings</strong> &gt; <strong>Community Plugins</strong>, search for <strong>Obsidian Git</strong>, and install.</li>
+                <li>Initialize a Git repository inside your vault folder:
                   <pre><code>cd "~/Documents/ObsidianVault"
 git init
 git remote add origin https://github.com/your-username/my-obsidian-vault.git</code></pre>
                 </li>
-                <li>In Obsidian Git settings, configure **Auto backup interval (minutes)** (e.g., every 30 minutes) and enable **Push on backup**.</li>
+                <li>In Obsidian Git settings, configure <strong>Auto backup interval</strong> (e.g., every 30 minutes) and enable <strong>Push on backup</strong>.</li>
                 <li>The plugin will silently auto-commit and push all your notes in the background!</li>
               </ol>
-              
-              <h5 style="margin-top: 1.5rem;">Method B: Automatic Scripted Backup (Shell Script)</h5>
-              <p>You can create a fast automation script inside your vault directory (e.g., <code>sync_vault.bat</code> on Windows or <code>sync_vault.sh</code> on macOS/Linux):</p>
-              <pre><code>@echo off
-cd "C:\Users\samko\Desktop\OpenSource\Obsidian Vault"
-git add .
-git commit -m "auto-vault backup: %date% %time%"
-git push origin main</code></pre>
-              <p>You can bind this to Windows Task Scheduler or cron to run hourly, keeping your vault completely backed up.</p>
             </div>
           </div>
         </div>
-
-        <!-- Accordion 4: Step-by-Step Local Model Fine-Tuning Guide -->
         <div class="accordion-item glass">
           <div class="accordion-trigger">
             <span class="accordion-num">04</span>
-            <h4>How to Fine-Tune & Train Custom Local Models for Ollama</h4>
-            <span class="accordion-arrow">▼</span>
+            <h4>How to Fine-Tune Custom Local Models for Ollama</h4>
+            <span class="accordion-arrow">&#9660;</span>
           </div>
           <div class="accordion-content">
-            <p>Because Ollama is strictly an <strong>inference runner</strong>, it does not support model training directly. Instead, models are fine-tuned using dedicated machine learning libraries (such as Python + Unsloth/Hugging Face) on GPU hardware, compiled into a GGUF file, and then loaded into Ollama. Here is the step-by-step fine-tuning pipeline:</p>
-            
+            <p>Because Ollama is strictly an <strong>inference runner</strong>, models are fine-tuned using dedicated ML libraries, compiled into GGUF, and loaded into Ollama.</p>
             <div class="tab-container">
-              <h5>Step 1: Assemble Your Structured Code Dataset</h5>
-              <p>Create a training dataset of your coding patterns in JSONLines format (e.g., <code>dataset.jsonl</code>):</p>
+              <h5>Step 1: Assemble Your Dataset</h5>
+              <p>Create a training dataset in JSONLines format (<code>dataset.jsonl</code>):</p>
               <pre><code>{"instruction": "Create a Fastify schema.", "input": "", "output": "import { z } from 'zod';..."}
 {"instruction": "Fix error in list_directory tool.", "input": "depth 0 user profile error", "output": "if (isUserHome(path)) return;..."}</code></pre>
-
-              <h5 style="margin-top: 1.5rem;">Step 2: Fine-Tune the Base Coding Weights (LoRA)</h5>
-              <p>Use Python scripts with the highly efficient <strong>Unsloth</strong> or <strong>LLaMA-Factory</strong> libraries to execute a LoRA fine-tune on a base model (like <code>Qwen2.5-Coder-7B</code>) using an NVIDIA GPU:</p>
+              <h5>Step 2: Fine-Tune with LoRA (Python + Unsloth)</h5>
               <pre><code>from unsloth import FastLanguageModel
-import torch
-
-max_seq_length = 2048
 model, tokenizer = FastLanguageModel.from_pretrained(
     model_name = "Qwen/Qwen2.5-Coder-7B-Instruct",
-    max_seq_length = max_seq_length,
+    max_seq_length = 2048,
     load_in_4bit = True,
 )
-
-# Apply LoRA adapters
-model = FastLanguageModel.get_peft_model(
-    model,
-    r = 16,
-    target_modules = ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"],
-    lora_alpha = 16,
-    lora_dropout = 0,
-    bias = "none",
-)
-
-# Initialize Trainer & run model.fit() on your dataset...</code></pre>
-
-              <h5 style="margin-top: 1.5rem;">Step 3: Merge Weights and Export as GGUF</h5>
-              <p>Once training finishes, merge the LoRA adapters back into the 16-bit base model and quantize them into a single GGUF weight file:</p>
-              <pre><code># Merge and save in 16-bit or 4-bit GGUF format
-model.save_pretrained_gguf("custom_source_model", tokenizer, quantization_method = "q8_0")</code></pre>
-              <p>This generates a compressed <code>custom_source_model-q8_0.gguf</code> file ready for local CPU/GPU execution.</p>
-
-              <h5 style="margin-top: 1.5rem;">Step 4: Create a Custom Ollama Modelfile</h5>
-              <p>Create a file named <code>Modelfile</code> in your directory referencing your newly compiled weights, and define its systems parameters and prompt patterns:</p>
-              <pre><code># Reference the newly compiled GGUF file
-FROM ./custom_source_model-q8_0.gguf
-
-# Set inference parameters
+model = FastLanguageModel.get_peft_model(model, r=16, ...)</code></pre>
+              <h5>Step 3: Export as GGUF</h5>
+              <pre><code>model.save_pretrained_gguf("custom_model", tokenizer, quantization_method = "q8_0")</code></pre>
+              <h5>Step 4: Create Ollama Modelfile</h5>
+              <pre><code>FROM ./custom_model-q8_0.gguf
 PARAMETER temperature 0.3
 PARAMETER num_ctx 32768
-
-# Establish agent system prompt
-SYSTEM """
-You are openSource, an elite local-first AI software engineer.
-You prefer clean, functional TypeScript code and autonomous tool-driven solutions.
-"""</code></pre>
-
-              <h5 style="margin-top: 1.5rem;">Step 5: Compile the Model into Ollama</h5>
-              <p>Register the custom model with your local Ollama instance and run it through openSource CLI:</p>
-              <pre><code># 1. Compile modelfile inside Ollama
-ollama create Source-custom -f Modelfile
-
-# 2. Run the newly trained model in openSource CLI
+SYSTEM """You are OpenSource, an elite local-first AI software engineer."""</code></pre>
+              <h5>Step 5: Compile and Run</h5>
+              <pre><code>ollama create Source-custom -f Modelfile
 opensource --model Source-custom</code></pre>
-              <p>Your local agent is now fully executing the code and patterns you trained it on!</p>
             </div>
           </div>
         </div>
-
       </div>
     </section>
   </main>
 
-  <!-- Premium Footer -->
+  <!-- Footer -->
   <footer>
     <div class="footer-container">
       <div class="footer-brand">
-        <span class="logo-icon">◈</span>
+        <span class="logo-icon">&#9674;</span>
         <span class="logo-text">open<span>Source</span></span>
       </div>
-      <p class="copyright">&copy; 2026 openSource CLI AI. Built premium. Compatible with GitHub Pages.</p>
+      <div class="footer-links">
+        <a href="https://github.com/samkomedved319-dev/OpenSource" target="_blank">GitHub</a>
+        <a href="#features">Features</a>
+        <a href="#install">Install</a>
+        <a href="#changelog">Changelog</a>
+      </div>
+      <p class="copyright">&copy; 2026 OpenSource CLI. Built with &#9829; for the open-source community.</p>
     </div>
   </footer>
 
-  <!-- Script -->
   <script src="opensource.js"></script>
 </body>
 </html>
